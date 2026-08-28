@@ -48,7 +48,7 @@ export class CatalogueSearchComponent implements OnInit, OnDestroy {
           catchError(error => {
             this.searching = false;
             this.message = error.error?.message || 'Could not search the catalogue';
-            return of({ artists: [], albums: [], tracks: [], genres: [], warnings: [] });
+            return of({ artists: [], albums: [], tracks: [], genres: [] });
           })
         );
       }),

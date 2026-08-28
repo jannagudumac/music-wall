@@ -79,9 +79,6 @@
   </div>
 
   <p *ngIf="errorMessage" class="message error">{{ errorMessage }}</p>
-  <p *ngIf="result.warnings.length" class="message">
-    Some catalogue results are temporarily incomplete: {{ result.warnings.join(' ') }}
-  </p>
   <div *ngIf="loading" class="message-empty">Searching the catalogue...</div>
 
   <ng-container *ngIf="!loading">

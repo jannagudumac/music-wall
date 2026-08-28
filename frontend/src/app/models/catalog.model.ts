@@ -42,7 +42,6 @@ export interface CatalogSearchResult {
   albums: Album[];
   tracks: Track[];
   genres: Genre[];
-  warnings: string[];
 }
 
 export interface CatalogSuggestion {

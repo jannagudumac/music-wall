@@ -1,5 +1,5 @@
-# Backend generated files
-backend/target/
+# Maven generated files
+**/target/
 *.log
 .env
 !.env.example

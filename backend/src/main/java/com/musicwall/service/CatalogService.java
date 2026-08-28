@@ -16,6 +16,7 @@ import com.musicwall.repository.AlbumRepository;
 import com.musicwall.repository.ArtistRepository;
 import com.musicwall.repository.TrackRepository;
 import com.musicwall.repository.GenreRepository;
+import com.musicwall.repository.projection.CatalogSuggestionProjection;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,7 +77,7 @@ public class CatalogService {
             return List.of();
         }
 
-        List<com.musicwall.dto.CatalogSuggestionProjection> rows = new java.util.ArrayList<>();
+        List<CatalogSuggestionProjection> rows = new java.util.ArrayList<>();
         rows.addAll(artistRepository.findSuggestions(cleanQuery, 5));
         rows.addAll(albumRepository.findSuggestions(cleanQuery, 5));
         rows.addAll(trackRepository.findSuggestions(cleanQuery, 5));

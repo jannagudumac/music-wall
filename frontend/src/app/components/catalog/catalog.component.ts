@@ -16,7 +16,7 @@ import { CatalogService } from '../../services/catalog.service';
 })
 export class CatalogComponent implements OnInit, OnDestroy {
 
-  result: CatalogSearchResult = { artists: [], albums: [], tracks: [], genres: [], warnings: [] };
+  result: CatalogSearchResult = { artists: [], albums: [], tracks: [], genres: [] };
   searchForm: FormGroup;
   loading = false;
   errorMessage = '';

@@ -1,4 +1,4 @@
-package com.musicwall.dto;
+package com.musicwall.repository.projection;
 
 /**
  * Internal view of one ranked row returned by PostgreSQL.

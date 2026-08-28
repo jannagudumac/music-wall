@@ -138,10 +138,10 @@ class CatalogServiceTest {
         verify(trackRepository).findByAlbumIdOrderByTitleAsc(8L);
     }
 
-    private com.musicwall.dto.CatalogSuggestionProjection suggestion(
+    private com.musicwall.repository.projection.CatalogSuggestionProjection suggestion(
             Long id, String type, String title, String subtitle, Float score
     ) {
-        return new com.musicwall.dto.CatalogSuggestionProjection() {
+        return new com.musicwall.repository.projection.CatalogSuggestionProjection() {
             public Long getId() { return id; }
             public String getType() { return type; }
             public String getTitle() { return title; }

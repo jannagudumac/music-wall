@@ -9,7 +9,6 @@ public class CatalogSearchDTO {
     private List<AlbumDTO> albums = new ArrayList<>();
     private List<TrackDTO> tracks = new ArrayList<>();
     private List<GenreDTO> genres = new ArrayList<>();
-    private List<String> warnings = new ArrayList<>();
 
     public List<ArtistDTO> getArtists() {
         return artists;
@@ -43,7 +42,4 @@ public class CatalogSearchDTO {
         this.genres = genres;
     }
 
-    public List<String> getWarnings() { return warnings; }
-
-    public void setWarnings(List<String> warnings) { this.warnings = warnings; }
 }

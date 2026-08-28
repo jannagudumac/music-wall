@@ -1,9 +1,0 @@
-com\musicwall\importer\CatalogueData$Album.class
-com\musicwall\importer\CatalogueData$Track.class
-com\musicwall\importer\MusicBrainzImporter$1.class
-com\musicwall\importer\CatalogueData$Genre.class
-com\musicwall\importer\SqlSeedWriter.class
-com\musicwall\importer\CatalogueData$Artist.class
-com\musicwall\importer\MusicBrainzImporter$CuratedArtist.class
-com\musicwall\importer\CatalogueData.class
-com\musicwall\importer\MusicBrainzImporter.class

@@ -3,7 +3,7 @@
   <div *ngIf="loading" class="message-loading message-empty">Loading profile...</div>
 
   <ng-container *ngIf="profile">
-    <header class="profile-hero">
+    <article class="profile-card">
       <div class="hero-pattern" aria-hidden="true"><span>♪</span><span>♫</span><span>♪</span></div>
       <input
         #avatarInput
@@ -37,15 +37,76 @@
         (click)="openEditor()">
         Edit profile
       </button>
-    </header>
+    </article>
 
-    <section class="profile-body">
-      <div class="collection-block">
-        <div class="block-heading">
-          <p class="section-label">About</p>
-          <h2>{{ profile.username }}</h2>
+    <section *ngIf="isOwnProfile" class="security-section" aria-labelledby="security-title">
+      <h2 id="security-title">Security</h2>
+
+      <p *ngIf="passwordMessage" class="password-success" role="status">{{ passwordMessage }}</p>
+
+      <div *ngIf="!passwordFormOpen" class="security-summary">
+        <div>
+          <h3>Password</h3>
+          <p>Change the password used to sign in to your account.</p>
         </div>
-        <p>{{ profile.bio || 'This user has not added a bio yet.' }}</p>
+        <button
+          type="button"
+          class="secondary-action"
+          (click)="openPasswordForm()">
+          Change password
+        </button>
+      </div>
+
+      <div *ngIf="passwordFormOpen" class="password-editor">
+        <form
+          #passwordForm="ngForm"
+          class="password-form"
+          (ngSubmit)="changePassword()">
+          <label>
+            Current password
+            <input
+              type="password"
+              name="currentPassword"
+              [(ngModel)]="passwordModel.currentPassword"
+              autocomplete="current-password"
+              required>
+          </label>
+          <label>
+            New password
+            <input
+              type="password"
+              name="newPassword"
+              [(ngModel)]="passwordModel.newPassword"
+              autocomplete="new-password"
+              minlength="6"
+              required>
+            <small>At least 6 characters</small>
+          </label>
+          <label>
+            Confirm new password
+            <input
+              type="password"
+              name="confirmPassword"
+              [(ngModel)]="passwordModel.confirmPassword"
+              autocomplete="new-password"
+              required>
+          </label>
+          <p
+            *ngIf="passwordModel.confirmPassword && passwordModel.newPassword !== passwordModel.confirmPassword"
+            class="password-error">
+            New passwords do not match.
+          </p>
+          <p *ngIf="passwordError" class="password-error">{{ passwordError }}</p>
+          <div class="password-actions">
+            <button type="button" class="secondary-action" (click)="closePasswordForm()">Cancel</button>
+            <button
+              type="submit"
+              class="main-button"
+              [disabled]="passwordSaving || passwordForm.invalid || passwordModel.newPassword !== passwordModel.confirmPassword">
+              {{ passwordSaving ? 'Changing...' : 'Change password' }}
+            </button>
+          </div>
+        </form>
       </div>
     </section>
 
@@ -70,7 +131,7 @@
             <textarea
               name="bio"
               [(ngModel)]="editModel.bio"
-              maxlength="240"
+              maxlength="300"
               rows="4"
               placeholder="Tell other members about your music tastes."></textarea>
           </label>

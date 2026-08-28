@@ -15,24 +15,6 @@
         }
         <span>{{ pageTitle }}</span>
       </p>
-      <a routerLink="/dashboard" class="mobile-title">Music Wall</a>
-
-      <nav class="topbar-actions" aria-label="Quick links">
-        <form class="catalog-shortcut" (ngSubmit)="searchCatalogue()">
-          <button type="submit" aria-label="Search catalogue">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="7"></circle>
-              <path d="m20 20-4-4"></path>
-            </svg>
-          </button>
-          <input
-            type="search"
-            name="catalogQuery"
-            [(ngModel)]="catalogQuery"
-            aria-label="Search catalogue"
-            placeholder="Search catalogue…">
-        </form>
-      </nav>
     </header>
 
     <main class="page-content">

@@ -1,4 +1,6 @@
-.members-panel { margin-top: 15px; }
+.members-panel {
+  margin: 0;
+}
 
 .members-inline {
   align-items: center;
@@ -7,7 +9,7 @@
 }
 
 .members-inline h2 {
-  color: var(--color-support);
+  color: #334155;
   flex: 0 0 auto;
   font-family: "Nunito", sans-serif;
   font-size: 13px;
@@ -27,6 +29,9 @@
 }
 
 .add-people-button span { font-size: 18px; font-weight: 400; line-height: 1; }
+.add-people-button .add-people-label-full,
+.add-people-button .add-people-label-compact { font-size: inherit; font-weight: inherit; }
+.add-people-label-compact { display: none; }
 
 .member-list {
   display: flex;
@@ -54,6 +59,40 @@
   box-shadow: 0 2px 7px rgba(49, 91, 100, 0.1);
   outline: none;
   transform: translateY(-1px);
+}
+
+.member-chip > a {
+  align-items: center;
+  color: inherit;
+  display: flex;
+  gap: 7px;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.remove-member-button {
+  align-items: center;
+  align-self: center;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  color: #64748b;
+  display: inline-flex;
+  flex: 0 0 28px;
+  font-size: 17px;
+  font-weight: 500;
+  height: 28px;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  width: 28px;
+}
+
+.remove-member-button:hover,
+.remove-member-button:focus-visible {
+  background: var(--color-dominant-soft);
+  color: var(--color-dominant);
+  outline: none;
 }
 
 .member-avatar {
@@ -93,6 +132,43 @@
   border: 0;
   color: white;
   min-width: 120px;
+}
+
+.invite-results {
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.invite-result {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 10px 12px;
+}
+
+.invite-result + .invite-result {
+  border-top: 1px solid var(--color-border);
+}
+
+.invite-result strong {
+  color: var(--color-support);
+  overflow-wrap: anywhere;
+}
+
+.invite-result .add-member-button {
+  background: transparent;
+  border: 1px solid var(--color-dominant);
+  color: var(--color-dominant);
+  min-width: 120px;
+}
+
+.invite-result .add-member-button:hover:not(:disabled),
+.invite-result .add-member-button:focus-visible {
+  background: var(--color-dominant-soft);
 }
 
 .invite-success,
@@ -138,8 +214,16 @@ button:disabled { cursor: not-allowed; opacity: 0.55; }
 @media (max-width: 650px) {
   .invite-row { grid-template-columns: 1fr; }
   .invite-row button { width: 100%; }
-  .members-panel { padding: 10px; }
+  .members-inline { flex-wrap: wrap; }
+  .member-list { min-width: 0; }
+  .add-people-button { flex: 0 0 auto; margin-left: auto; }
   .member-copy { display: none; }
   .member-chip { padding: 3px; }
   .member-avatar { height: 27px; width: 27px; }
+}
+
+@media (max-width: 480px) {
+  .add-people-button { gap: 4px; padding: 8px 10px; }
+  .add-people-label-full { display: none; }
+  .add-people-label-compact { display: inline; }
 }

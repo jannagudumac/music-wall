@@ -1,5 +1,7 @@
 package com.musicwall.dto;
 
+import com.musicwall.entity.Wallpaper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +9,8 @@ public class MusicWallDetailDTO {
 
     private Long id;
     private String name;
-    private String description;
     private String ownerUsername;
-    private String wallpaper;
+    private Wallpaper wallpaper;
     private String wallColor;
     private List<MusicSectionDTO> sections = new ArrayList<>();
 
@@ -29,14 +30,6 @@ public class MusicWallDetailDTO {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getOwnerUsername() {
         return ownerUsername;
     }
@@ -45,11 +38,11 @@ public class MusicWallDetailDTO {
         this.ownerUsername = ownerUsername;
     }
 
-    public String getWallpaper() {
+    public Wallpaper getWallpaper() {
         return wallpaper;
     }
 
-    public void setWallpaper(String wallpaper) {
+    public void setWallpaper(Wallpaper wallpaper) {
         this.wallpaper = wallpaper;
     }
 

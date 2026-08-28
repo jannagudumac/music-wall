@@ -13,7 +13,6 @@ export type WallWallpaper =
 export interface MusicWall {
   id: number;
   name: string;
-  description: string | null;
   ownerUsername: string;
   wallpaper: WallWallpaper;
   wallColor: string;
@@ -21,7 +20,6 @@ export interface MusicWall {
 
 export interface CreateMusicWallRequest {
   name: string;
-  description: string;
   wallpaper: WallWallpaper;
   wallColor: string;
 }

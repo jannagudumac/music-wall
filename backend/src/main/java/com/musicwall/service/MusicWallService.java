@@ -39,8 +39,7 @@ public class MusicWallService {
         UserEntity owner = findUser(username);
         MusicWallEntity wall = new MusicWallEntity();
         wall.setName(request.getName());
-        wall.setDescription(request.getDescription());
-        wall.setWallpaper(normalizeWallpaper(request.getWallpaper()));
+        wall.setWallpaper(request.getWallpaper());
         wall.setWallColor(normalizeWallColor(request.getWallColor()));
         wall.setOwner(owner);
         return convertToDTO(musicWallRepository.save(wall));
@@ -61,9 +60,8 @@ public class MusicWallService {
         MusicWallDetailDTO dto = new MusicWallDetailDTO();
         dto.setId(wall.getId());
         dto.setName(wall.getName());
-        dto.setDescription(wall.getDescription());
         dto.setOwnerUsername(wall.getOwner().getUsername());
-        dto.setWallpaper(normalizeWallpaper(wall.getWallpaper()));
+        dto.setWallpaper(wall.getWallpaper());
         dto.setWallColor(normalizeWallColor(wall.getWallColor()));
         dto.setSections(musicSectionService.getSectionsForWall(username, id));
         return dto;
@@ -73,8 +71,7 @@ public class MusicWallService {
     public MusicWallDTO updateWall(Long id, String username, CreateMusicWallRequest request) {
         MusicWallEntity wall = wallAccessService.findOwnedWall(username, id);
         wall.setName(request.getName());
-        wall.setDescription(request.getDescription());
-        wall.setWallpaper(normalizeWallpaper(request.getWallpaper()));
+        wall.setWallpaper(request.getWallpaper());
         wall.setWallColor(normalizeWallColor(request.getWallColor()));
         return convertToDTO(musicWallRepository.save(wall));
     }
@@ -86,7 +83,7 @@ public class MusicWallService {
             UpdateWallAppearanceRequest request
     ) {
         MusicWallEntity wall = wallAccessService.findOwnedWall(username, id);
-        wall.setWallpaper(normalizeWallpaper(request.getWallpaper()));
+        wall.setWallpaper(request.getWallpaper());
         wall.setWallColor(normalizeWallColor(request.getWallColor()));
         return convertToDTO(musicWallRepository.save(wall));
     }
@@ -178,18 +175,10 @@ public class MusicWallService {
         MusicWallDTO dto = new MusicWallDTO();
         dto.setId(wall.getId());
         dto.setName(wall.getName());
-        dto.setDescription(wall.getDescription());
         dto.setOwnerUsername(wall.getOwner().getUsername());
-        dto.setWallpaper(normalizeWallpaper(wall.getWallpaper()));
+        dto.setWallpaper(wall.getWallpaper());
         dto.setWallColor(normalizeWallColor(wall.getWallColor()));
         return dto;
-    }
-
-    private String normalizeWallpaper(String wallpaper) {
-        if (wallpaper == null || wallpaper.isBlank()) {
-            return "NONE";
-        }
-        return wallpaper.matches("IMAGE_[1-9]") ? wallpaper : "NONE";
     }
 
     private String normalizeWallColor(String wallColor) {

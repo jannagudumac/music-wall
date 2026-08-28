@@ -11,23 +11,42 @@
           <span class="member-avatar">{{ member.username.charAt(0).toUpperCase() }}</span>
           <span class="member-copy"><strong>{{ member.username }}</strong><small>Member</small></span>
         </a>
-        <button *ngIf="isOwner" type="button" (click)="remove(member)" aria-label="Remove member">×</button>
+        <button
+          *ngIf="isOwner"
+          type="button"
+          class="remove-member-button"
+          (click)="remove(member)"
+          [attr.aria-label]="'Remove ' + member.username + ' from wall'"
+          [attr.title]="'Remove ' + member.username">
+          &times;
+        </button>
       </div>
     </div>
     <button *ngIf="isOwner" type="button" class="add-people-button" (click)="formOpen = !formOpen">
-      <span aria-hidden="true">+</span> {{ formOpen ? 'Close' : 'Add people' }}
+      <span aria-hidden="true">+</span>
+      <span class="add-people-label-full">{{ formOpen ? 'Close' : 'Add people' }}</span>
+      <span class="add-people-label-compact">{{ formOpen ? 'Close' : 'Add' }}</span>
     </button>
   </div>
 
   <form *ngIf="isOwner && formOpen" class="invite-form" (ngSubmit)="search()">
     <label for="member-query">Search registered users</label>
-    <div class="invite-row">
+    <div class="invite-row invite-search-row">
       <input id="member-query" [(ngModel)]="query" name="query" placeholder="Username">
       <button type="submit" [disabled]="query.trim().length < 2">Search</button>
     </div>
-    <div *ngFor="let candidate of candidates" class="invite-row">
-      <strong>{{ candidate.username }}</strong>
-      <button type="button" [disabled]="saving" (click)="add(candidate.username)">Add member</button>
+    <div *ngIf="candidates.length" class="invite-results" aria-label="User search results">
+      <div *ngFor="let candidate of candidates" class="invite-result">
+        <strong>{{ candidate.username }}</strong>
+        <button
+          type="button"
+          class="add-member-button"
+          [disabled]="saving"
+          (click)="add(candidate.username)"
+        >
+          Add member
+        </button>
+      </div>
     </div>
     <p *ngIf="message" class="invite-success">{{ message }}</p>
     <p *ngIf="errorMessage" class="invite-error">{{ errorMessage }}</p>

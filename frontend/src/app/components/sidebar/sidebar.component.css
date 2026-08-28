@@ -249,7 +249,7 @@
     bottom: 0;
     box-shadow: 0 -4px 18px rgba(23, 59, 68, 0.16);
     flex-direction: row;
-    height: calc(54px + env(safe-area-inset-bottom));
+    height: calc(var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom));
     left: 0;
     overflow: visible;
     padding-bottom: env(safe-area-inset-bottom);

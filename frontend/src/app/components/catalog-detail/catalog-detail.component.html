@@ -38,13 +38,25 @@
   </section>
 
   <section *ngIf="track as item" class="item-details track-details">
-    <div class="track-symbol">&#9834;</div>
-    <div>
-      <p class="page-label">Track</p><h1>{{ item.title }}</h1>
-      <a [routerLink]="['/catalog/artists', item.artistId]" queryParamsHandling="merge" class="artist-link">{{ item.artistName }}</a>
-      <p *ngIf="item.albumId">From <a [routerLink]="['/catalog/albums', item.albumId]" queryParamsHandling="merge">{{ item.albumTitle }}</a></p>
-      <p>{{ formatDuration(item.durationSeconds) }}</p>
-      <div class="genre-list"><span *ngFor="let genre of item.genres">{{ genre.name }}</span></div>
+    <span class="track-symbol" aria-hidden="true">&#9834;</span>
+    <p class="page-label track-type-label">Track</p>
+    <h1>{{ item.title }}</h1>
+    <a [routerLink]="['/catalog/artists', item.artistId]" queryParamsHandling="merge" class="artist-link">{{ item.artistName }}</a>
+    <dl class="detail-facts">
+      <div *ngIf="item.albumId">
+        <dt>Album</dt>
+        <dd><a [routerLink]="['/catalog/albums', item.albumId]" queryParamsHandling="merge">{{ item.albumTitle }}</a></dd>
+      </div>
+      <div>
+        <dt>Duration</dt>
+        <dd>{{ formatDuration(item.durationSeconds) }}</dd>
+      </div>
+    </dl>
+    <div *ngIf="item.genres.length" class="track-genre-group">
+      <p class="metadata-label">Genres</p>
+      <div class="genre-list track-genres">
+        <span *ngFor="let genre of item.genres">{{ genre.name }}</span>
+      </div>
     </div>
   </section>
 </main>

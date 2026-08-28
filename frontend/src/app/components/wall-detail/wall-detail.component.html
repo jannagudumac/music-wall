@@ -12,7 +12,7 @@
   <ng-container *ngIf="wall && !loading">
     <a routerLink="/walls" class="wall-back-link">← Back to my walls</a>
 
-    <div class="wall-topbar">
+    <div class="wall-info-card">
       <app-wall-header
         [wall]="wall"
         [isOwner]="isOwner"
@@ -20,6 +20,8 @@
         (deleteRequested)="deleteWall()"
         (error)="showError($event)">
       </app-wall-header>
+
+      <div class="wall-info-divider" aria-hidden="true"></div>
 
       <app-wall-members
         [wallId]="wallId"

@@ -66,13 +66,13 @@
         All ({{ result.artists.length + result.albums.length + result.tracks.length }})
       </button>
       <button type="button" [class.active]="activeFilter === 'tracks'" (click)="setFilter('tracks')">
-        <img src="/assets/icons/catalog-track.svg" alt=""> Tracks
+        <img src="/assets/icons/catalog-track.svg" alt=""> Tracks ({{ result.tracks.length }})
       </button>
       <button type="button" [class.active]="activeFilter === 'albums'" (click)="setFilter('albums')">
-        <img src="/assets/icons/catalog-album.svg" alt=""> Albums
+        <img src="/assets/icons/catalog-album.svg" alt=""> Albums ({{ result.albums.length }})
       </button>
       <button type="button" [class.active]="activeFilter === 'artists'" (click)="setFilter('artists')">
-        <img src="/assets/icons/catalog-artist.svg" alt=""> Artists
+        <img src="/assets/icons/catalog-artist.svg" alt=""> Artists ({{ result.artists.length }})
       </button>
     </div>
     <span class="catalog-source">Local music catalogue</span>

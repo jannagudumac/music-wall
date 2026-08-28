@@ -16,7 +16,7 @@
 }
 
 .wall-grid {
-  align-items: stretch;
+  align-items: start;
   column-gap: 30px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -38,10 +38,10 @@
 
 .wall-cover {
   background-position: center;
-  background-repeat: repeat;
-  background-size: 230px auto;
+  background-repeat: no-repeat;
+  background-size: cover;
   border-bottom: 1px solid rgba(23, 59, 68, 0.08);
-  height: 92px;
+  height: 96px;
   position: relative;
 }
 
@@ -53,18 +53,21 @@
   position: absolute;
 }
 
-.wall-card-content { padding: 14px 17px 15px; }
+.wall-card-content { padding: 12px 15px 13px; }
 
 .wall-card h2 {
   color: var(--color-support);
   font-size: 19px;
+  line-height: 1.2;
   margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .wall-card-field,
 .wall-card-inline-input { align-items: center; display: flex; gap: 5px; }
-.wall-card-description-field { margin-top: 4px; }
-
+.wall-card-name { min-width: 0; }
 .inline-edit-button,
 .wall-card-inline-input button {
   align-items: center;
@@ -75,6 +78,7 @@
   justify-content: center;
   opacity: 0.65;
   padding: 2px;
+  flex: 0 0 23px;
   width: 23px;
 }
 
@@ -93,48 +97,25 @@
   border-radius: 0;
   box-shadow: none;
   color: var(--color-support);
+  min-width: 0;
   padding: 0 1px 1px;
+  width: 100%;
 }
 
 .wall-card-inline-input input:focus { border-color: var(--color-support); outline: none; }
 .wall-card-name-input input { font-family: "DM Serif Display", serif; font-size: 19px; max-width: 250px; }
-.wall-card-description-input input { color: var(--color-muted); font-family: "Nunito", sans-serif; font-size: 14px; max-width: 320px; }
-
-.wall-description {
-  color: var(--color-muted);
-  font-size: 14px;
-  line-height: 1.45;
-  margin: 4px 0 0;
-  min-height: 21px;
-}
-
 .wall-owner-row {
-  align-items: center;
   color: #759ba3;
-  display: flex;
   font-size: 11px;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.owner-avatar {
-  align-items: center;
-  background: var(--color-dominant);
-  border-radius: 50%;
-  color: white;
-  display: inline-flex;
-  font-size: 9px;
-  font-weight: 900;
-  height: 24px;
-  justify-content: center;
-  width: 24px;
+  margin-top: 5px;
 }
 
 .wall-actions {
   align-items: center;
   display: flex;
   gap: 10px;
-  margin-top: 10px;
+  justify-content: space-between;
+  margin-top: 11px;
 }
 
 .wall-actions button,
@@ -189,7 +170,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 238px;
+  min-height: 170px;
   padding: 20px;
   transition: background-color 160ms ease, border-color 160ms ease;
 }
@@ -282,7 +263,17 @@
   .page-title h1 { font-size: 38px; }
   .page-title > div > p:last-child { font-size: 14px; }
   .wall-grid { grid-template-columns: 1fr; }
-  .wall-cover { height: 105px; }
-  .wall-card-content { padding: 15px; }
-  .create-card { min-height: 228px; }
+  .wall-cover { height: 92px; }
+  .wall-card-content { padding: 13px 15px 14px; }
+  .create-card { min-height: 170px; }
+}
+
+@media (max-width: 480px) {
+  .page-title { margin-bottom: 18px; }
+  .wall-grid { row-gap: 14px; }
+  .wall-cover { height: 84px; }
+  .wall-card-content { padding: 12px 13px 13px; }
+  .wall-actions .open-link { flex: 1 1 auto; }
+  .create-card { min-height: 156px; padding: 16px; }
+  .create-card-form { gap: 11px; }
 }

@@ -21,7 +21,7 @@ export class WallsComponent implements OnInit {
   saving = false;
   showCreateForm = false;
   editingWallId: number | null = null;
-  editingWallField: 'name' | 'description' | null = null;
+  editingWallField: 'name' | null = null;
   editingWallValue = '';
   errorMessage = '';
 
@@ -33,7 +33,6 @@ export class WallsComponent implements OnInit {
   ) {
     this.wallForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', Validators.maxLength(500)],
       wallpaper: ['NONE', Validators.required],
       wallColor: ['#FFFFFF', Validators.required]
     });
@@ -53,7 +52,6 @@ export class WallsComponent implements OnInit {
     this.showCreateForm = false;
     this.wallForm.reset({
       name: '',
-      description: '',
       wallpaper: 'NONE',
       wallColor: '#FFFFFF'
     });
@@ -102,12 +100,12 @@ export class WallsComponent implements OnInit {
     });
   }
 
-  startEdit(wall: MusicWall, field: 'name' | 'description'): void {
+  startEdit(wall: MusicWall): void {
     if (wall.ownerUsername !== this.authService.getUsername()) return;
     this.editingWallId = wall.id;
-    this.editingWallField = field;
-    this.editingWallValue = field === 'name' ? wall.name : (wall.description || '');
-    setTimeout(() => document.getElementById('wall-card-' + field + '-' + wall.id)?.focus());
+    this.editingWallField = 'name';
+    this.editingWallValue = wall.name;
+    setTimeout(() => document.getElementById('wall-card-name-' + wall.id)?.focus());
   }
 
   cancelEdit(): void {
@@ -119,11 +117,10 @@ export class WallsComponent implements OnInit {
   updateWall(wall: MusicWall): void {
     if (this.editingWallId !== wall.id || !this.editingWallField) return;
     const value = this.editingWallValue.trim();
-    if (this.editingWallField === 'name' && !value) return;
+    if (!value) return;
 
     this.musicWallService.updateWall(wall.id, {
-      name: this.editingWallField === 'name' ? value : wall.name,
-      description: this.editingWallField === 'description' ? value : (wall.description || ''),
+      name: value,
       wallpaper: wall.wallpaper || 'NONE',
       wallColor: wall.wallColor || '#FFFFFF'
     }).subscribe({

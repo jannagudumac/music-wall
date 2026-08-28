@@ -19,12 +19,11 @@ export class WallHeaderComponent {
   @Output() deleteRequested = new EventEmitter<void>();
   @Output() error = new EventEmitter<string>();
 
-  editingField: 'name' | 'description' | null = null;
+  editingField: 'name' | null = null;
   editingValue = '';
   appearanceOpen = false;
 
   readonly wallpaperOptions: { value: WallWallpaper; label: string }[] = [
-    { value: 'NONE', label: 'No wallpaper' },
     ...Array.from({ length: 9 }, (_, index) => ({
       value: `IMAGE_${index + 1}` as WallWallpaper,
       label: `Image ${index + 1}`
@@ -34,10 +33,10 @@ export class WallHeaderComponent {
   constructor(private musicWallService: MusicWallService) {
   }
 
-  startEdit(field: 'name' | 'description'): void {
+  startEdit(): void {
     if (!this.isOwner) return;
-    this.editingField = field;
-    this.editingValue = field === 'name' ? this.wall.name : (this.wall.description || '');
+    this.editingField = 'name';
+    this.editingValue = this.wall.name;
   }
 
   cancelEdit(): void {
@@ -50,14 +49,12 @@ export class WallHeaderComponent {
     const value = this.editingValue.trim();
     if (this.editingField === 'name' && !value) return;
     this.musicWallService.updateWall(this.wall.id, {
-      name: this.editingField === 'name' ? value : this.wall.name,
-      description: this.editingField === 'description' ? value : (this.wall.description || ''),
+      name: value,
       wallpaper: this.wall.wallpaper,
       wallColor: this.wall.wallColor
     }).subscribe({
       next: updated => {
         this.wall.name = updated.name;
-        this.wall.description = updated.description;
         this.wallChanged.emit(this.wall);
         this.cancelEdit();
       },
@@ -69,8 +66,14 @@ export class WallHeaderComponent {
     this.saveAppearance(wallpaper, this.wall.wallColor);
   }
 
-  changeWallColor(wallColor: string): void {
-    this.saveAppearance(this.wall.wallpaper, wallColor);
+  selectSolidColour(): void {
+    if (this.wall.wallpaper !== 'NONE') {
+      this.saveAppearance('NONE', this.wall.wallColor);
+    }
+  }
+
+  changeSolidColour(wallColor: string): void {
+    this.saveAppearance('NONE', wallColor);
   }
 
   private saveAppearance(wallpaper: WallWallpaper, wallColor: string): void {

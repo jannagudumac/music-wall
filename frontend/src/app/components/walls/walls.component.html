@@ -29,7 +29,7 @@
       <div class="wall-card-content">
       <div *ngIf="editingWallId !== wall.id || editingWallField !== 'name'" class="wall-card-field wall-card-name">
         <h2>{{ wall.name }}</h2>
-        <button *ngIf="wall.ownerUsername === authService.getUsername()" type="button" class="inline-edit-button" aria-label="Edit wall name" title="Edit wall name" (click)="startEdit(wall, 'name')">
+        <button *ngIf="wall.ownerUsername === authService.getUsername()" type="button" class="inline-edit-button" aria-label="Edit wall name" title="Edit wall name" (click)="startEdit(wall)">
           <img src="/assets/icons/section-pencil.svg" alt="">
         </button>
       </div>
@@ -38,18 +38,7 @@
         <button type="button" aria-label="Save wall name" title="Save wall name" [disabled]="!editingWallValue.trim()" (click)="updateWall(wall)"><img src="/assets/icons/section-check.svg" alt=""></button>
       </div>
 
-      <div *ngIf="editingWallId !== wall.id || editingWallField !== 'description'" class="wall-card-field wall-card-description-field">
-        <p class="wall-description">{{ wall.description || 'No description' }}</p>
-        <button *ngIf="wall.ownerUsername === authService.getUsername()" type="button" class="inline-edit-button" aria-label="Edit wall description" title="Edit wall description" (click)="startEdit(wall, 'description')">
-          <img src="/assets/icons/section-pencil.svg" alt="">
-        </button>
-      </div>
-      <div *ngIf="editingWallId === wall.id && editingWallField === 'description'" class="wall-card-inline-input wall-card-description-input">
-        <input [id]="'wall-card-description-' + wall.id" [(ngModel)]="editingWallValue" maxlength="500" placeholder="No description" aria-label="Wall description" (keydown.enter)="$event.preventDefault(); updateWall(wall)" (keydown.escape)="cancelEdit()">
-        <button type="button" aria-label="Save wall description" title="Save wall description" (click)="updateWall(wall)"><img src="/assets/icons/section-check.svg" alt=""></button>
-      </div>
       <div class="wall-owner-row">
-        <span class="owner-avatar">{{ wall.ownerUsername.charAt(0).toUpperCase() }}</span>
         <span>Owner: {{ wall.ownerUsername }}</span>
       </div>
       <div class="wall-actions">

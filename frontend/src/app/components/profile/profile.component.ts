@@ -25,6 +25,15 @@ export class ProfileComponent implements OnInit {
   saving = false;
   uploadingAvatar = false;
   avatarVersion = 0;
+  passwordFormOpen = false;
+  passwordSaving = false;
+  passwordMessage = '';
+  passwordError = '';
+  passwordModel = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -100,6 +109,44 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  openPasswordForm(): void {
+    this.passwordMessage = '';
+    this.passwordError = '';
+    this.passwordFormOpen = true;
+  }
+
+  closePasswordForm(): void {
+    if (this.passwordSaving) return;
+    this.passwordFormOpen = false;
+    this.passwordError = '';
+    this.resetPasswordModel();
+  }
+
+  changePassword(): void {
+    const currentPassword = this.passwordModel.currentPassword;
+    const newPassword = this.passwordModel.newPassword;
+    if (!currentPassword || newPassword.length < 6) return;
+    if (newPassword !== this.passwordModel.confirmPassword) {
+      this.passwordError = 'New passwords do not match.';
+      return;
+    }
+
+    this.passwordSaving = true;
+    this.passwordError = '';
+    this.profileService.changePassword({ currentPassword, newPassword }).subscribe({
+      next: () => {
+        this.passwordSaving = false;
+        this.passwordFormOpen = false;
+        this.resetPasswordModel();
+        this.passwordMessage = 'Password changed successfully.';
+      },
+      error: error => {
+        this.passwordSaving = false;
+        this.passwordError = error.error?.message || 'Could not change password';
+      }
+    });
+  }
+
   private load(username: string): void {
     this.loading = true;
     this.errorMessage = '';
@@ -113,5 +160,13 @@ export class ProfileComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  private resetPasswordModel(): void {
+    this.passwordModel = {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    };
   }
 }

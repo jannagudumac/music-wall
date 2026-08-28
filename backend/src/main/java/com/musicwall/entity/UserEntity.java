@@ -25,7 +25,7 @@ public class UserEntity {
     private String role;
 
 
-    @Column(length = 240)
+    @Column(length = 300)
     private String bio;
 
     @Column(columnDefinition = "bytea")

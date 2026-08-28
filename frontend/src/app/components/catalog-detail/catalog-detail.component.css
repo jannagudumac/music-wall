@@ -1,15 +1,16 @@
 .detail-page {
   margin: 0 auto;
-  max-width: 960px;
-  padding: 28px 30px 64px;
+  max-width: 760px;
+  padding: 24px 0 48px;
 }
+
 .back-link {
   background: transparent;
   border: 0;
   color: var(--color-dominant);
   display: inline-block;
   font-weight: 600;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   padding: 0;
   text-decoration: none;
 }
@@ -51,8 +52,103 @@
   height: 96px;
   justify-content: center;
 }
+
+.large-avatar { width: 96px; }
 .track-symbol {
   border-radius: 20px;
+}
+
+.track-details {
+  align-items: start;
+  display: grid;
+  font-family: "Nunito", sans-serif;
+  gap: 0 22px;
+  grid-template-areas:
+    "icon type"
+    "icon title"
+    "icon artist"
+    ". facts"
+    ". genres";
+  grid-template-columns: 80px minmax(0, 1fr);
+}
+
+.track-details .track-symbol {
+  align-self: start;
+  border-radius: 12px;
+  flex: none;
+  font-size: 30px;
+  grid-area: icon;
+  height: 80px;
+  width: 80px;
+}
+
+.track-type-label {
+  align-self: center;
+  grid-area: type;
+}
+
+.track-details h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(30px, 4vw, 36px);
+  grid-area: title;
+  margin: 4px 0 8px;
+}
+
+.track-details .artist-link {
+  display: inline-block;
+  font-size: 17px;
+  font-family: "Nunito", sans-serif;
+  grid-area: artist;
+  justify-self: start;
+}
+
+.detail-facts {
+  display: grid;
+  gap: 12px 24px;
+  grid-area: facts;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 18px 0 0;
+  max-width: 520px;
+}
+
+.detail-facts div {
+  min-width: 0;
+}
+
+.detail-facts dt {
+  color: var(--color-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.detail-facts dd {
+  color: #475569;
+  font-family: "Nunito", sans-serif;
+  line-height: 1.4;
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.track-genre-group {
+  grid-area: genres;
+  margin-top: 16px;
+}
+
+.track-genre-group .metadata-label {
+  color: var(--color-muted);
+  font-family: "Nunito", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.track-genres {
+  margin-top: 8px;
 }
 .cover-placeholder {
   align-items: center;
@@ -164,7 +260,10 @@
 }
 @media (max-width: 650px) {
   .detail-page {
-    padding: 24px 16px 50px;
+    padding: 18px 0 32px;
+  }
+  .back-link {
+    margin-bottom: 12px;
   }
   .item-details {
     align-items: flex-start;
@@ -180,6 +279,32 @@
     font-size: 40px;
     height: 90px;
   }
+  .large-avatar {
+    flex: 0 0 90px;
+    width: 90px;
+  }
+  .track-details {
+    display: grid;
+    gap: 0 10px;
+    grid-template-areas:
+      "icon type"
+      "title title"
+      "artist artist"
+      "facts facts"
+      "genres genres";
+    grid-template-columns: 44px minmax(0, 1fr);
+    padding: 20px;
+  }
+  .track-details .track-symbol {
+    border-radius: 9px;
+    font-size: 20px;
+    height: 44px;
+    width: 44px;
+  }
+  .track-details h1 {
+    font-size: clamp(27px, 8vw, 32px);
+    margin-top: 14px;
+  }
   .cover-placeholder {
     flex-basis: auto;
     height: auto;
@@ -188,5 +313,13 @@
   }
   .card-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .track-details .detail-facts {
+    gap: 12px;
+    grid-template-columns: 1fr;
+    margin-top: 16px;
   }
 }

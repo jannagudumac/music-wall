@@ -1,5 +1,6 @@
 package com.musicwall.service;
 
+import com.musicwall.dto.ChangePasswordRequest;
 import com.musicwall.dto.ProfileAvatarDTO;
 import com.musicwall.dto.ProfileDTO;
 import com.musicwall.dto.UpdateProfileDTO;
@@ -8,6 +9,7 @@ import com.musicwall.exception.BusinessException;
 import com.musicwall.exception.ResourceNotFoundException;
 import com.musicwall.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +27,7 @@ public class ProfileService {
     );
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public ProfileDTO getProfile(String username) {
@@ -36,6 +39,16 @@ public class ProfileService {
         UserEntity user = findUser(username);
         user.setBio(cleanOptional(request.getBio()));
         return convertToDTO(userRepository.save(user));
+    }
+
+    @Transactional
+    public void changePassword(String username, ChangePasswordRequest request) {
+        UserEntity user = findUser(username);
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new BusinessException("Current password is incorrect");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
     @Transactional

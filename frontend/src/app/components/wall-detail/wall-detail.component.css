@@ -1,7 +1,7 @@
 .wall-page-content {
   margin: 0 auto;
   max-width: 1120px;
-  min-height: calc(100vh - 62px);
+  min-height: calc(100vh - var(--app-header-height));
   padding: 32px 40px 72px;
 }
 
@@ -17,7 +17,7 @@
   background-position: top left;
   background-repeat: repeat;
   background-size: 300px 300px;
-  inset: 62px 0 0;
+  inset: var(--app-header-height) 0 0;
   position: fixed;
   transition: background-color 0.2s ease;
   z-index: 0;
@@ -39,7 +39,8 @@
 .wall-back-link {
   align-items: center;
   backdrop-filter: blur(6px);
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(148, 163, 184, 0.28);
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(20, 40, 50, 0.08);
   color: var(--color-dominant);
@@ -52,15 +53,25 @@
 
 .wall-back-link:hover { text-decoration: underline; }
 
-.wall-topbar {
-  align-items: start;
-  display: grid;
-  gap: 8px;
-  grid-template-columns: minmax(0, 1fr);
+.wall-info-card {
+  backdrop-filter: blur(7px);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
   margin-bottom: 12px;
+  padding: 13px 15px 12px;
 }
 
-.wall-page-content > .wall-topbar { z-index: 10; }
+.wall-info-card app-wall-header,
+.wall-info-card app-wall-members { display: block; }
+
+.wall-info-divider {
+  border-top: 1px solid rgba(148, 163, 184, 0.28);
+  margin: 12px 0 10px;
+}
+
+.wall-page-content > .wall-info-card { z-index: 10; }
 
 .wall-board {
   min-height: 420px;
@@ -210,12 +221,11 @@ button:disabled { cursor: not-allowed; opacity: 0.55; }
 
 @media (max-width: 850px) {
   .wall-page-content {
-    min-height: calc(100vh - 58px);
-    padding: 22px 16px calc(72px + env(safe-area-inset-bottom));
+    min-height: calc(100vh - var(--app-header-height));
+    padding: 22px 16px;
   }
 
   .section-list { column-gap: 22px; }
-  .page-wallpaper { inset: 58px 0 0; }
   .wall-board { padding: 0 0 30px; }
 }
 
@@ -224,6 +234,9 @@ button:disabled { cursor: not-allowed; opacity: 0.55; }
 }
 
 @media (max-width: 650px) {
+  .wall-page-content { overflow-x: clip; }
+  .wall-info-card { border-radius: 12px; padding: 10px; }
+  .wall-info-divider { margin: 10px 0; }
   .section-form { min-height: 100px; }
   .section-form.is-open { min-height: 165px; }
 }

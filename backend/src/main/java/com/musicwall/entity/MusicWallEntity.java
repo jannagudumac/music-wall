@@ -2,6 +2,8 @@ package com.musicwall.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,11 +27,9 @@ public class MusicWallEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(length = 500)
-    private String description;
-
     @Column(length = 20)
-    private String wallpaper = "NONE";
+    @Enumerated(EnumType.STRING)
+    private Wallpaper wallpaper = Wallpaper.NONE;
 
     @Column(name = "wall_color", length = 7)
     private String wallColor = "#FFFFFF";
@@ -65,19 +65,11 @@ public class MusicWallEntity {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getWallpaper() {
+    public Wallpaper getWallpaper() {
         return wallpaper;
     }
 
-    public void setWallpaper(String wallpaper) {
+    public void setWallpaper(Wallpaper wallpaper) {
         this.wallpaper = wallpaper;
     }
 

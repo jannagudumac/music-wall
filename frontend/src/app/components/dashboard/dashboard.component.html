@@ -20,32 +20,10 @@
           aria-label="Search the music catalogue">
         <button type="submit">Search</button>
       </form>
-
-      <a class="main-button" routerLink="/walls" [queryParams]="{ create: true }">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7H5"></path>
-        </svg>
-        New wall
-      </a>
     </div>
   </header>
 
   <p *ngIf="errorMessage" class="message-error">{{ errorMessage }}</p>
-
-  <div class="summary-grid">
-    <a routerLink="/walls" class="summary-card card">
-      <span class="summary-icon purple-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2zm3 4h8m-8 4h8m-8 4h5"></path>
-        </svg>
-      </span>
-      <span class="summary-copy">
-        <small>Your music walls</small>
-        <strong>{{ loading ? '...' : walls.length }}</strong>
-      </span>
-      <span class="summary-arrow" aria-hidden="true">&rarr;</span>
-    </a>
-  </div>
 
   <div class="recent-panel">
     <div class="panel-header">
@@ -81,9 +59,7 @@
         <span class="wall-copy">
           <strong>{{ wall.name }}</strong>
           <span class="wall-meta">
-            <small>{{ wall.description || 'No description' }}</small>
-            <i aria-hidden="true">·</i>
-            <span class="wall-owner">Owner: {{ wall.ownerUsername }}</span>
+            <small>Owner: {{ wall.ownerUsername }}</small>
           </span>
         </span>
         <span class="member-avatar" [title]="'Owner: ' + wall.ownerUsername">

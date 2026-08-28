@@ -1,0 +1,54 @@
+<header class="wall-header">
+  <div class="wall-heading-row">
+    <div class="wall-title">
+      <div *ngIf="editingField !== 'name'" class="wall-title-line">
+        <h1>{{ wall.name }}</h1>
+        <button *ngIf="isOwner" type="button" class="wall-field-edit-button" (click)="startEdit('name')">
+          <img src="/assets/icons/section-pencil.svg" alt="Edit name">
+        </button>
+      </div>
+      <div *ngIf="editingField === 'name'" class="wall-field-inline">
+        <input [(ngModel)]="editingValue" maxlength="100" (keydown.enter)="saveField()">
+        <button type="button" (click)="saveField()">Save</button>
+        <button type="button" (click)="cancelEdit()">Cancel</button>
+      </div>
+
+      <div *ngIf="editingField !== 'description'" class="wall-title-line wall-description-line">
+        <p>{{ wall.description || 'No description' }}</p>
+        <button *ngIf="isOwner" type="button" class="wall-field-edit-button" (click)="startEdit('description')">
+          <img src="/assets/icons/section-pencil.svg" alt="Edit description">
+        </button>
+      </div>
+      <div *ngIf="editingField === 'description'" class="wall-field-inline">
+        <input [(ngModel)]="editingValue" maxlength="500">
+        <button type="button" (click)="saveField()">Save</button>
+        <button type="button" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+
+    <div *ngIf="isOwner" class="wall-header-actions">
+      <button type="button" class="customize-button" (click)="appearanceOpen = !appearanceOpen">
+        Customize
+      </button>
+      <button type="button" class="item-delete-button" (click)="deleteRequested.emit()">Delete wall</button>
+      <div *ngIf="appearanceOpen" class="appearance-popover">
+        <strong>Wall appearance</strong>
+        <div class="wallpaper-grid">
+          <button
+            *ngFor="let option of wallpaperOptions"
+            type="button"
+            class="wallpaper-choice"
+            [class.selected]="wall.wallpaper === option.value"
+            (click)="changeWallpaper(option.value)">
+            <span class="wallpaper-thumbnail" [ngClass]="'wallpaper-' + option.value.toLowerCase()"></span>
+            <span>{{ option.label }}</span>
+          </button>
+        </div>
+        <label *ngIf="wall.wallpaper === 'NONE'" class="color-control">
+          Wall colour
+          <input type="color" [ngModel]="wall.wallColor" (ngModelChange)="changeWallColor($event)">
+        </label>
+      </div>
+    </div>
+  </div>
+</header>

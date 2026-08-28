@@ -1,0 +1,40 @@
+<section class="catalog-add-panel">
+  <div class="catalog-add-heading">
+    <h3>Add music</h3>
+    <button type="button" class="catalog-close-button" (click)="closed.emit()">× Close</button>
+  </div>
+  <div class="catalog-search-field">
+    <span aria-hidden="true">⌕</span>
+    <input
+      type="search"
+      [(ngModel)]="query"
+      placeholder="Search artist, album or track..."
+      aria-label="Search artist, album or track"
+      (ngModelChange)="queueSearch()">
+  </div>
+  <p *ngIf="searching" class="catalog-search-message">Searching...</p>
+  <p *ngIf="message" class="catalog-search-message">{{ message }}</p>
+
+  <div *ngIf="tracks.length || albums.length" class="catalog-result-list">
+    <article *ngFor="let track of tracks" class="catalog-result-row">
+      <span class="catalog-result-type">Track</span>
+      <div><strong>{{ track.title }}</strong><small>{{ track.artistName }}</small></div>
+      <button
+        type="button"
+        [disabled]="saving || !track.id || (track.id !== null && isAdded('TRACK', track.id))"
+        (click)="choose('TRACK', track)">
+        {{ track.id !== null && isAdded('TRACK', track.id) ? 'Added' : '+ Add' }}
+      </button>
+    </article>
+    <article *ngFor="let album of albums" class="catalog-result-row">
+      <span class="catalog-result-type album">Album</span>
+      <div><strong>{{ album.title }}</strong><small>{{ album.artistName }}</small></div>
+      <button
+        type="button"
+        [disabled]="saving || isAdded('ALBUM', album.id)"
+        (click)="choose('ALBUM', album)">
+        {{ isAdded('ALBUM', album.id) ? 'Added' : '+ Add' }}
+      </button>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+<div class="music-item" [class.listened]="item.status === 'LISTENED'">
+  <div class="item-main">
+    <span class="type-badge">{{ item.itemType === 'TRACK' ? '♪' : '▣' }}</span>
+    <div>
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.artist }}</p>
+      <a
+        *ngIf="item.catalogTrackId"
+        [routerLink]="['/catalog/tracks', item.catalogTrackId]"
+        [queryParams]="{ returnWallId: wallId, returnSectionId: sectionId }">
+        Open catalogue →
+      </a>
+      <a
+        *ngIf="item.catalogAlbumId"
+        [routerLink]="['/catalog/albums', item.catalogAlbumId]"
+        [queryParams]="{ returnWallId: wallId, returnSectionId: sectionId }">
+        Open catalogue →
+      </a>
+    </div>
+  </div>
+  <div class="item-actions">
+    <button type="button" class="status-button" (click)="toggleStatus()">
+      {{ item.status === 'LISTENED' ? '✓ Listened' : 'To listen' }}
+    </button>
+    <button type="button" class="item-delete-button" (click)="deleteItem()">
+      <img src="/assets/icons/section-delete.svg" alt="Delete">
+    </button>
+  </div>
+</div>

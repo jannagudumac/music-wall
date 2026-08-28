@@ -1,0 +1,67 @@
+<section class="wall-page-content">
+  <div
+    *ngIf="wall"
+    class="page-wallpaper"
+    [ngClass]="'wallpaper-' + wall.wallpaper.toLowerCase()"
+    [style.--wall-color]="wall.wallColor">
+  </div>
+
+  <div *ngIf="loading" class="page-message">Loading...</div>
+  <p *ngIf="errorMessage" class="message-error">{{ errorMessage }}</p>
+
+  <ng-container *ngIf="wall && !loading">
+    <a routerLink="/walls" class="wall-back-link">← Back to my walls</a>
+
+    <div class="wall-topbar">
+      <app-wall-header
+        [wall]="wall"
+        [isOwner]="isOwner"
+        (wallChanged)="updateWallHeader($event)"
+        (deleteRequested)="deleteWall()"
+        (error)="showError($event)">
+      </app-wall-header>
+
+      <app-wall-members
+        [wallId]="wallId"
+        [ownerUsername]="wall.ownerUsername"
+        [isOwner]="isOwner">
+      </app-wall-members>
+    </div>
+
+    <div class="wall-board">
+      <div class="section-list">
+        <app-wall-section
+          *ngFor="let section of wall.sections"
+          [wallId]="wallId"
+          [section]="section"
+          (deleted)="removeSection($event)"
+          (error)="showError($event)">
+        </app-wall-section>
+
+        <div class="section-form" [class.is-open]="showSectionForm">
+          <button
+            *ngIf="!showSectionForm"
+            type="button"
+            class="section-form-trigger"
+            (click)="showSectionForm = true">
+            <span class="add-section-symbol" aria-hidden="true">+</span>
+            <span>Add a section</span>
+          </button>
+
+          <form
+            *ngIf="showSectionForm"
+            class="section-form-fields"
+            [formGroup]="sectionForm"
+            (ngSubmit)="createSection()">
+            <label for="section-name">Section name</label>
+            <input id="section-name" formControlName="name" placeholder="Genre, mood or theme">
+            <div class="section-form-actions">
+              <button type="button" (click)="showSectionForm = false">Cancel</button>
+              <button type="submit" class="primary" [disabled]="saving">Add section</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

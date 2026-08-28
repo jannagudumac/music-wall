@@ -1,0 +1,62 @@
+<article
+  class="music-section"
+  [attr.id]="'section-' + section.id"
+  [ngClass]="'note-color-' + section.noteColor.toLowerCase()">
+  <header class="section-header">
+    <div class="section-title-block">
+      <div *ngIf="!editing" class="section-name-row">
+        <h2>{{ section.name }}</h2>
+        <button type="button" class="section-name-edit-button" (click)="startEdit()">
+          <img src="/assets/icons/section-pencil.svg" alt="Rename section">
+        </button>
+      </div>
+      <div *ngIf="editing" class="inline-section-name-edit">
+        <input [(ngModel)]="editingName" (keydown.enter)="saveName()">
+        <button type="button" (click)="saveName()">Save</button>
+        <button type="button" (click)="editing = false">Cancel</button>
+      </div>
+      <span>{{ section.items.length }} items</span>
+    </div>
+
+    <div class="section-actions">
+      <button type="button" class="section-icon-button" (click)="colorPickerOpen = !colorPickerOpen">
+        <img src="/assets/icons/section-colour.svg" alt="Change section colour">
+      </button>
+      <div *ngIf="colorPickerOpen" class="section-color-palette">
+        <button
+          *ngFor="let color of sectionColors"
+          type="button"
+          [style.background-color]="color.hex"
+          [attr.aria-label]="color.label"
+          (click)="changeColor(color.value)"></button>
+      </div>
+      <button type="button" class="section-icon-button" (click)="deleteSection()">
+        <img src="/assets/icons/section-delete.svg" alt="Delete section">
+      </button>
+    </div>
+  </header>
+
+  <app-catalogue-search
+    *ngIf="searchOpen"
+    [existingItems]="section.items"
+    [saving]="saving"
+    (selected)="addSelection($event)"
+    (closed)="searchOpen = false">
+  </app-catalogue-search>
+
+  <div *ngIf="section.items.length === 0" class="section-empty">No music yet</div>
+  <div class="item-list">
+    <app-music-item
+      *ngFor="let item of section.items"
+      [wallId]="wallId"
+      [sectionId]="section.id"
+      [item]="item"
+      (removed)="removeItem($event)"
+      (error)="error.emit($event)">
+    </app-music-item>
+  </div>
+
+  <button *ngIf="!searchOpen" type="button" class="add-music-button" (click)="searchOpen = true">
+    <span aria-hidden="true">+</span> Add music
+  </button>
+</article>

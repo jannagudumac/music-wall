@@ -1,0 +1,35 @@
+<section class="members-panel">
+  <div class="members-inline">
+    <h2>People</h2>
+    <div class="member-list" aria-label="Wall members">
+      <a class="member-chip" [routerLink]="['/users', ownerUsername]">
+        <span class="member-avatar">{{ ownerUsername.charAt(0).toUpperCase() }}</span>
+        <span class="member-copy"><strong>{{ ownerUsername }}</strong><small>Owner</small></span>
+      </a>
+      <div *ngFor="let member of members" class="member-chip">
+        <a [routerLink]="['/users', member.username]">
+          <span class="member-avatar">{{ member.username.charAt(0).toUpperCase() }}</span>
+          <span class="member-copy"><strong>{{ member.username }}</strong><small>Member</small></span>
+        </a>
+        <button *ngIf="isOwner" type="button" (click)="remove(member)" aria-label="Remove member">×</button>
+      </div>
+    </div>
+    <button *ngIf="isOwner" type="button" class="add-people-button" (click)="formOpen = !formOpen">
+      <span aria-hidden="true">+</span> {{ formOpen ? 'Close' : 'Add people' }}
+    </button>
+  </div>
+
+  <form *ngIf="isOwner && formOpen" class="invite-form" (ngSubmit)="search()">
+    <label for="member-query">Search registered users</label>
+    <div class="invite-row">
+      <input id="member-query" [(ngModel)]="query" name="query" placeholder="Username">
+      <button type="submit" [disabled]="query.trim().length < 2">Search</button>
+    </div>
+    <div *ngFor="let candidate of candidates" class="invite-row">
+      <strong>{{ candidate.username }}</strong>
+      <button type="button" [disabled]="saving" (click)="add(candidate.username)">Add member</button>
+    </div>
+    <p *ngIf="message" class="invite-success">{{ message }}</p>
+    <p *ngIf="errorMessage" class="invite-error">{{ errorMessage }}</p>
+  </form>
+</section>

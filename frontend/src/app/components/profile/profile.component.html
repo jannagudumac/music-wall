@@ -1,0 +1,88 @@
+<section class="profile-page">
+  <p *ngIf="errorMessage" class="message-error">{{ errorMessage }}</p>
+  <div *ngIf="loading" class="message-loading message-empty">Loading profile...</div>
+
+  <ng-container *ngIf="profile">
+    <header class="profile-hero">
+      <div class="hero-pattern" aria-hidden="true"><span>♪</span><span>♫</span><span>♪</span></div>
+      <input
+        #avatarInput
+        type="file"
+        class="avatar-input"
+        accept="image/jpeg,image/png,image/webp"
+        (change)="chooseAvatar($event)">
+      <button
+        type="button"
+        class="avatar"
+        [class.editable]="isOwnProfile"
+        [disabled]="!isOwnProfile || uploadingAvatar"
+        [attr.aria-label]="isOwnProfile ? 'Change profile picture' : profile.username + ' profile picture'"
+        (click)="avatarInput.click()">
+        <img *ngIf="avatarSrc" [src]="avatarSrc" [alt]="profile.username + ' avatar'">
+        <span *ngIf="!avatarSrc">
+          {{ uploadingAvatar ? '…' : profile.username.charAt(0).toUpperCase() }}
+        </span>
+      </button>
+
+      <div class="profile-identity">
+        <p>Music profile</p>
+        <h1>{{ profile.username }}</h1>
+        <p class="profile-bio">{{ profile.bio || 'No bio yet.' }}</p>
+      </div>
+
+      <button
+        *ngIf="isOwnProfile"
+        type="button"
+        class="edit-profile-button"
+        (click)="openEditor()">
+        Edit profile
+      </button>
+    </header>
+
+    <section class="profile-body">
+      <div class="collection-block">
+        <div class="block-heading">
+          <p class="section-label">About</p>
+          <h2>{{ profile.username }}</h2>
+        </div>
+        <p>{{ profile.bio || 'This user has not added a bio yet.' }}</p>
+      </div>
+    </section>
+
+    <div *ngIf="editing && editModel" class="editor-backdrop" (click)="closeEditor()">
+      <section
+        class="profile-editor"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="edit-profile-title"
+        (click)="$event.stopPropagation()">
+        <div class="editor-heading">
+          <div>
+            <p class="section-label">Profile settings</p>
+            <h2 id="edit-profile-title">Edit profile</h2>
+          </div>
+          <button type="button" class="close-editor" aria-label="Close" (click)="closeEditor()">×</button>
+        </div>
+
+        <form (ngSubmit)="saveProfile()">
+          <label>
+            Bio
+            <textarea
+              name="bio"
+              [(ngModel)]="editModel.bio"
+              maxlength="240"
+              rows="4"
+              placeholder="Tell other members about your music tastes."></textarea>
+          </label>
+          <p *ngIf="editError" class="message-error">{{ editError }}</p>
+          <div class="editor-actions">
+            <button type="button" class="secondary-action" (click)="closeEditor()">Cancel</button>
+            <button type="submit" class="main-button" [disabled]="saving">
+              {{ saving ? 'Saving...' : 'Save changes' }}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </ng-container>
+</section>

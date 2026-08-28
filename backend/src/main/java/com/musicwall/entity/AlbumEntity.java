@@ -38,12 +38,6 @@ public class AlbumEntity {
     @Column(name = "cover_url", length = 500)
     private String coverUrl;
 
-    @Column(name = "musicbrainz_id", unique = true, length = 36)
-    private String musicBrainzId;
-
-    @Column(name = "musicbrainz_release_id", length = 36)
-    private String musicBrainzReleaseId;
-
     @ManyToOne
     @JoinColumn(name = "artist_id", nullable = false)
     private ArtistEntity artist;
@@ -93,22 +87,6 @@ public class AlbumEntity {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
-    }
-
-    public String getMusicBrainzId() {
-        return musicBrainzId;
-    }
-
-    public void setMusicBrainzId(String musicBrainzId) {
-        this.musicBrainzId = musicBrainzId;
-    }
-
-    public String getMusicBrainzReleaseId() {
-        return musicBrainzReleaseId;
-    }
-
-    public void setMusicBrainzReleaseId(String musicBrainzReleaseId) {
-        this.musicBrainzReleaseId = musicBrainzReleaseId;
     }
 
     public ArtistEntity getArtist() {

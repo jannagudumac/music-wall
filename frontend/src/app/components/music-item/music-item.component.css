@@ -1,1 +1,105 @@
-/* Wall detail styles are shared by the parent page stylesheet. */
+.music-item {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(100, 83, 51, 0.08);
+  border-radius: 10px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin: 8px 10px;
+  padding: 11px 12px;
+}
+
+.music-item.listened { background: rgba(220, 252, 231, 0.55); }
+
+.item-main {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  gap: 9px;
+  min-width: 0;
+}
+
+.item-main > div { min-width: 0; }
+
+.type-badge {
+  align-items: center;
+  background: rgba(248, 105, 94, 0.12);
+  border-radius: 8px;
+  color: #ef665b;
+  display: flex;
+  flex: 0 0 34px;
+  font-size: 20px;
+  font-weight: 700;
+  height: 34px;
+  justify-content: center;
+  padding: 0;
+}
+
+.item-main h3 { color: #172033; font-size: 15px; margin: 0; }
+.item-main p { color: #64748b; font-size: 13px; margin: 1px 0 0; }
+
+.music-item a {
+  color: var(--color-dominant);
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  max-width: 100%;
+  overflow: hidden;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-actions {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: 5px;
+  justify-content: flex-end;
+  margin-left: 0;
+}
+
+.item-actions button { font-size: 11px; padding: 6px 8px; }
+
+.item-actions .item-delete-button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(220, 38, 38, 0.26);
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  padding: 5px;
+  width: 32px;
+}
+
+.item-delete-button img { display: block; height: 19px; width: 19px; }
+
+.item-actions .item-delete-button:hover,
+.item-actions .item-delete-button:focus-visible {
+  background: rgba(254, 226, 226, 0.7);
+  border-color: rgba(220, 38, 38, 0.5);
+}
+
+.status-button { color: var(--color-dominant); }
+.listened .status-button { border-color: #86efac; color: #15803d; }
+
+button {
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  color: #475569;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 11px;
+}
+
+@media (max-width: 850px) {
+  .item-actions { flex-wrap: wrap; }
+}
+
+@media (max-width: 650px) {
+  .music-item { align-items: flex-start; grid-template-columns: 1fr; }
+  .item-actions { justify-content: flex-start; margin: 2px 0 0 43px; }
+}

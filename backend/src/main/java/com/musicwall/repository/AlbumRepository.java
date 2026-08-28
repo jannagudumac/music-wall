@@ -7,21 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AlbumRepository extends JpaRepository<AlbumEntity, Long> {
-
-    boolean existsByArtistIdAndTitleIgnoreCase(Long artistId, String title);
-
-    Optional<AlbumEntity> findByMusicBrainzId(String musicBrainzId);
-
-    Optional<AlbumEntity> findFirstByArtistIdAndTitleIgnoreCase(Long artistId, String title);
 
     List<AlbumEntity> findAllByOrderByTitleAsc();
 
     List<AlbumEntity> findByArtistIdOrderByReleaseYearAscTitleAsc(Long artistId);
-
-    long countByArtistId(Long artistId);
 
     @Query(value = """
             SELECT al.*

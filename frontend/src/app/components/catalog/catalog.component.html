@@ -75,7 +75,7 @@
         <img src="/assets/icons/catalog-artist.svg" alt=""> Artists
       </button>
     </div>
-    <span class="catalog-source">Curated with data from MusicBrainz</span>
+    <span class="catalog-source">Local music catalogue</span>
   </div>
 
   <p *ngIf="errorMessage" class="message error">{{ errorMessage }}</p>
@@ -98,7 +98,7 @@
         <span class="result-artwork artist-artwork">{{ artist.name.charAt(0) }}</span>
         <span class="result-main">
           <strong>{{ artist.name }}</strong>
-          <small>MusicBrainz artist</small>
+          <small>Catalogue artist</small>
         </span>
         <span class="type-pill artist">artist</span>
         <span class="result-meta">Artist</span>

@@ -1,6 +1,5 @@
 export interface Artist {
   id: number | null;
-  musicBrainzId: string;
   name: string;
 }
 
@@ -11,12 +10,10 @@ export interface Genre {
 
 export interface Album {
   id: number;
-  musicBrainzId: string;
   title: string;
   releaseYear: number | null;
   coverUrl: string | null;
   artistId: number | null;
-  artistMusicBrainzId: string;
   artistName: string;
   genres: Genre[];
   tracks: Track[];
@@ -24,14 +21,11 @@ export interface Album {
 
 export interface Track {
   id: number | null;
-  musicBrainzId: string;
   title: string;
   durationSeconds: number | null;
   artistId: number | null;
-  artistMusicBrainzId: string;
   artistName: string;
   albumId: number | null;
-  albumMusicBrainzId: string | null;
   albumTitle: string | null;
   albumCoverUrl: string | null;
   genres: Genre[];

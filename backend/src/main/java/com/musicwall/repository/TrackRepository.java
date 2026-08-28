@@ -7,17 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TrackRepository extends JpaRepository<TrackEntity, Long> {
-
-    long countByArtistId(Long artistId);
-
-    boolean existsByArtistIdAndTitleIgnoreCase(Long artistId, String title);
-
-    Optional<TrackEntity> findByMusicBrainzId(String musicBrainzId);
-
-    Optional<TrackEntity> findFirstByArtistIdAndTitleIgnoreCase(Long artistId, String title);
 
     List<TrackEntity> findAllByOrderByTitleAsc();
 

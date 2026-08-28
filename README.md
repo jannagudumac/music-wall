@@ -28,7 +28,7 @@ There is intentionally no email identity, pending collaboration state or complex
 | Backend | Java 17, Spring Boot 3.5, Spring Web, Validation, Security, Data JPA |
 | Security | JWT (JJWT), BCrypt, stateless Spring Security |
 | Database | PostgreSQL 16, Hibernate |
-| External catalogue source | MusicBrainz |
+| Initial catalogue source | MusicBrainz, through a separate development tool |
 | Tests | JUnit 5, Mockito, MockMvc, H2 in PostgreSQL compatibility mode, Jasmine/Karma |
 | Packaging | Maven Wrapper, npm, Docker, Docker Compose |
 
@@ -91,10 +91,48 @@ DB_URL=jdbc:postgresql://localhost:5432/music_wall_rncp
 DB_USERNAME=postgres
 DB_PASSWORD=replace_me
 JWT_SECRET=replace_with_a_random_secret_of_at_least_32_characters
-MUSICBRAINZ_USER_AGENT=MusicWallStudentProject/1.0 (https://github.com/your-account/music-wall)
 ```
 
 `JWT_SECRET`, `DB_USERNAME` and `DB_PASSWORD` have no committed production fallback. Hibernate creates/updates the RNCP schema; `schema.sql` adds the PostgreSQL trigram extension and catalogue search indexes after the tables exist.
+
+Populate a fresh catalogue after the backend has created its tables:
+
+```powershell
+psql -U postgres -d music_wall_rncp -f database/catalogue_seed.sql
+```
+
+The seed contains catalogue reference data only. It never creates users, walls,
+members, sections or listening states.
+
+## Catalogue architecture
+
+Normal application use is deliberately local:
+
+```text
+Angular -> Spring Boot -> PostgreSQL
+```
+
+MusicBrainz is not a runtime dependency. It is used only through the optional
+standalone utility in `tools/musicbrainz-importer/` to prepare the initial SQL
+seed:
+
+```text
+MusicBrainz -> external importer -> catalogue_seed.sql -> PostgreSQL
+```
+
+The backend has no MusicBrainz service, startup runner, provider configuration,
+or provider identifiers in its entities and REST DTOs. Search and detail pages
+therefore continue to work when the internet or MusicBrainz is unavailable. The
+importer directory can be removed after database preparation without affecting
+the application.
+
+## Wall detail component styles
+
+`WallDetailComponent` owns the complete page layout, wallpaper and section-grid
+positioning. `WallHeaderComponent`, `WallMembersComponent`,
+`WallSectionComponent`, `MusicItemComponent` and `CatalogueSearchComponent`
+each own the CSS for their own markup. Normal Angular style encapsulation is
+used; there is no wall-wide `ViewEncapsulation.None` or styling framework.
 
 ## Start locally
 
@@ -132,7 +170,9 @@ npm test
 npm run build
 ```
 
-The retained backend tests cover catalogue and MusicBrainz behaviour that still belongs to the MVP, in addition to focused wall/access/item tests.
+The normal backend tests cover the local catalogue and focused wall/access/item
+behaviour without internet access. Provider transformation tests live with the
+optional external importer and use local JSON fixtures only.
 
 ## Docker
 

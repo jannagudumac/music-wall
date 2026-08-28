@@ -38,8 +38,17 @@ flowchart LR
   end
   AS -->|HTTP + JSON + JWT| SEC
   BS --> R
-  BS --> MB[MusicBrainz API]
 ```
+
+MusicBrainz is outside this runtime diagram. Initial catalogue preparation is a
+separate development process:
+
+```text
+MusicBrainz -> tools/musicbrainz-importer -> database/catalogue_seed.sql -> PostgreSQL
+```
+
+Once PostgreSQL is populated, the importer is not needed for startup, search,
+detail pages, or adding catalogue music to a wall.
 
 The three physical/logical tiers are browser, backend and database. Inside the backend, Controller → Service → Repository is the layered code structure. Keeping both views separate is useful in an oral defense.
 
@@ -79,12 +88,11 @@ MUSIC_ITEM(#id, title, artist, item_type, status,
            section_id -> MUSIC_SECTION.id,
            catalog_track_id -> TRACK.id NULL,
            catalog_album_id -> ALBUM.id NULL)
-ARTIST(#id, name UQ, musicbrainz_id UQ, catalog_imported)
-ALBUM(#id, title, release_year, cover_url, musicbrainz_id UQ,
-      musicbrainz_release_id, artist_id -> ARTIST.id,
+ARTIST(#id, name UQ)
+ALBUM(#id, title, release_year, cover_url, artist_id -> ARTIST.id,
       UQ(artist_id, title))
-TRACK(#id, title, duration_seconds, musicbrainz_id UQ,
-      artist_id -> ARTIST.id, album_id -> ALBUM.id NULL)
+TRACK(#id, title, duration_seconds, artist_id -> ARTIST.id,
+      album_id -> ALBUM.id NULL)
 GENRE(#id, name UQ)
 ALBUM_GENRE(#album_id -> ALBUM.id, #genre_id -> GENRE.id)
 TRACK_GENRE(#track_id -> TRACK.id, #genre_id -> GENRE.id)
@@ -101,7 +109,7 @@ TRACK_GENRE(#track_id -> TRACK.id, #genre_id -> GENRE.id)
 | `wall_members` | `wall_id BIGINT FK`, `user_id BIGINT FK`, composite PK |
 | `music_section` | `id BIGINT identity PK`, `name VARCHAR(80) NOT NULL`, `note_color VARCHAR(20)`, `wall_id BIGINT NOT NULL FK` |
 | `music_item` | `id BIGINT identity PK`, `title VARCHAR(180) NOT NULL`, `artist VARCHAR(150) NOT NULL`, enum strings, required section FK, nullable album/track FKs |
-| `artist` | identity PK, `name VARCHAR(150) NOT NULL UNIQUE`, nullable unique MusicBrainz UUID |
+| `artist` | identity PK, `name VARCHAR(150) NOT NULL UNIQUE` |
 | `album` | identity PK, `title VARCHAR(180) NOT NULL`, required artist FK, optional metadata, artist/title unique pair |
 | `track` | identity PK, `title VARCHAR(180) NOT NULL`, required artist FK, **nullable** album FK |
 | `genre` | identity PK, `name VARCHAR(80) NOT NULL UNIQUE` |
@@ -222,6 +230,15 @@ AppComponent
 
 `WallDetailComponent` owns route loading and orchestration. Its children have one purposeful UI responsibility and communicate with `@Input`, `@Output` and `EventEmitter`. Catalogue search uses only `Subject → debounceTime → distinctUntilChanged → switchMap` so stale HTTP searches are cancelled.
 
+### Wall detail style ownership
+
+`WallDetailComponent` owns only the page container, wallpaper, messages,
+section-grid layout and add-section form. `WallHeaderComponent`,
+`WallMembersComponent`, `WallSectionComponent`, `MusicItemComponent` and
+`CatalogueSearchComponent` each own the styles for their local markup. Normal
+Angular style encapsulation is used; no `ViewEncapsulation.None`, `::ng-deep`,
+or styling framework is required.
+
 ## 11. Junior-friendly concept guide
 
 ### Angular concepts
@@ -299,8 +316,10 @@ AppComponent
 | `MusicSectionController` / `MusicSectionService` | CRUD for groups of notes within an accessible wall. | Walls cannot organise music by theme/genre. |
 | `MusicItemController` / `MusicItemService` | CRUD/status and exactly-one album-or-track rule. | Sections cannot contain catalogue music. |
 | `CatalogController` / `CatalogService` | Local catalogue search, suggestions and detail DTOs. | Users cannot browse or choose stored music. |
-| `MusicBrainzService` | Isolates external HTTP calls and response mapping. | Curated imports cannot retrieve source metadata. |
-| `CatalogImportService` / `CatalogImportRunner` | Idempotently imports a configured curated catalogue when enabled. | A fresh catalogue must be populated manually. |
+
+MusicBrainz import classes are intentionally absent from the backend. The
+standalone development tool generates a provider-independent SQL seed and has
+its own offline transformation tests.
 
 ### Entities and repositories
 
@@ -337,6 +356,10 @@ Auth DTOs (`RegisterRequest`, `LoginRequest`, `AuthResponse`) define credentials
 - A fresh `music_wall_rncp` database was safer and clearer than migrating obsolete social tables.
 - Navigation context is explicit in `returnWallId`, `returnSectionId` and a fragment, so refresh/back behaviour does not depend on hidden global history state.
 - Track-to-album remains optional even though mandatory cardinality would make a prettier diagram.
+- Track identity remains the local primary key. No artist/title uniqueness rule
+  is imposed because live, remastered and re-recorded versions can share a title.
+- MusicBrainz prepared the initial reference catalogue but is not part of the
+  normal application, MCD, REST API, or Spring configuration.
 - H2 is limited to a simple registration integration test; PostgreSQL-specific trigram behaviour remains covered by the real database/manual Docker flow instead of compatibility hacks.
 - `ResponseEntity` is avoided for ordinary DTO JSON but retained for avatar bytes because the response media type is data-dependent.
 

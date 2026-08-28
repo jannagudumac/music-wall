@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -22,8 +22,7 @@ import { WallSectionComponent } from '../wall-section/wall-section.component';
     WallSectionComponent
   ],
   templateUrl: './wall-detail.component.html',
-  styleUrl: './wall-detail.component.css',
-  encapsulation: ViewEncapsulation.None
+  styleUrl: './wall-detail.component.css'
 })
 export class WallDetailComponent implements OnInit, OnDestroy {
 

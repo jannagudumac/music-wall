@@ -28,9 +28,6 @@ public class TrackEntity {
     @Column(name = "duration_seconds")
     private Integer durationSeconds;
 
-    @Column(name = "musicbrainz_id", unique = true, length = 36)
-    private String musicBrainzId;
-
     @ManyToOne
     @JoinColumn(name = "artist_id", nullable = false)
     private ArtistEntity artist;
@@ -72,14 +69,6 @@ public class TrackEntity {
 
     public void setDurationSeconds(Integer durationSeconds) {
         this.durationSeconds = durationSeconds;
-    }
-
-    public String getMusicBrainzId() {
-        return musicBrainzId;
-    }
-
-    public void setMusicBrainzId(String musicBrainzId) {
-        this.musicBrainzId = musicBrainzId;
     }
 
     public ArtistEntity getArtist() {

@@ -123,7 +123,6 @@ public class CatalogService {
     private ArtistDTO convertArtist(ArtistEntity artist) {
         ArtistDTO dto = new ArtistDTO();
         dto.setId(artist.getId());
-        dto.setMusicBrainzId(artist.getMusicBrainzId());
         dto.setName(artist.getName());
         return dto;
     }
@@ -138,7 +137,6 @@ public class CatalogService {
     private AlbumDTO convertAlbum(AlbumEntity album) {
         AlbumDTO dto = new AlbumDTO();
         dto.setId(album.getId());
-        dto.setMusicBrainzId(album.getMusicBrainzId());
         dto.setTitle(album.getTitle());
         dto.setReleaseYear(album.getReleaseYear());
         dto.setCoverUrl(album.getCoverUrl());
@@ -154,7 +152,6 @@ public class CatalogService {
     private TrackDTO convertTrack(TrackEntity track) {
         TrackDTO dto = new TrackDTO();
         dto.setId(track.getId());
-        dto.setMusicBrainzId(track.getMusicBrainzId());
         dto.setTitle(track.getTitle());
         dto.setDurationSeconds(track.getDurationSeconds());
         dto.setArtistId(track.getArtist().getId());

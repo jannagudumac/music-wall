@@ -22,12 +22,6 @@ public class ArtistEntity {
     @Column(nullable = false, length = 150)
     private String name;
 
-    @Column(name = "musicbrainz_id", unique = true, length = 36)
-    private String musicBrainzId;
-
-    @Column(name = "catalog_imported", nullable = false, columnDefinition = "boolean default false")
-    private boolean catalogImported;
-
     public ArtistEntity() {
     }
 
@@ -47,19 +41,4 @@ public class ArtistEntity {
         this.name = name;
     }
 
-    public String getMusicBrainzId() {
-        return musicBrainzId;
-    }
-
-    public void setMusicBrainzId(String musicBrainzId) {
-        this.musicBrainzId = musicBrainzId;
-    }
-
-    public boolean isCatalogImported() {
-        return catalogImported;
-    }
-
-    public void setCatalogImported(boolean catalogImported) {
-        this.catalogImported = catalogImported;
-    }
 }

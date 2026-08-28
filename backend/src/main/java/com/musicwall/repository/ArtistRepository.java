@@ -7,15 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ArtistRepository extends JpaRepository<ArtistEntity, Long> {
-
-    boolean existsByNameIgnoreCase(String name);
-
-    Optional<ArtistEntity> findByMusicBrainzId(String musicBrainzId);
-
-    Optional<ArtistEntity> findFirstByNameIgnoreCase(String name);
 
     List<ArtistEntity> findAllByOrderByNameAsc();
 

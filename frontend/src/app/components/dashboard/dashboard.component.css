@@ -281,13 +281,6 @@
   .dashboard-hero {
     padding: 32px;
   }
-  .hero-actions {
-    align-items: stretch;
-    flex-wrap: wrap;
-  }
-  .quick-search {
-    flex-basis: 100%;
-  }
 }
 
 @media (max-width: 700px) {
@@ -296,24 +289,13 @@
     margin-bottom: 18px;
     padding: 24px 20px;
   }
-  .hero-copy {
-    margin-bottom: 22px;
-  }
   .dashboard-hero h1 {
     font-size: 36px;
-  }
-  .hero-copy > p:last-child {
-    font-size: 14px;
-  }
-  .hero-actions {
-    align-items: stretch;
-    flex-direction: column;
   }
   .quick-search {
     flex-direction: column;
     gap: 10px;
   }
-  .quick-search input { width: 100%; }
   .quick-search button {
     width: 100%;
   }
@@ -325,7 +307,6 @@
   }
   .wall-row {
     gap: 12px;
-    min-height: 88px;
     padding: 12px 14px;
   }
   .wall-preview {

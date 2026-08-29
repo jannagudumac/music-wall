@@ -161,13 +161,6 @@
 
 .color-picker-control { position: relative; }
 
-.section-actions > button {
-  background: rgba(255, 255, 255, 0.45);
-  border-color: rgba(100, 83, 51, 0.18);
-  font-size: 11px;
-  padding: 7px 9px;
-}
-
 .section-actions .section-icon-button {
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(100, 83, 51, 0.16);
@@ -264,7 +257,5 @@ button {
 @media (max-width: 650px) {
   :host { margin-left: auto; margin-right: auto; width: calc(100% - 2px); }
   .section-header { gap: 8px; }
-  .section-name-row h2 { white-space: normal; }
-  .section-actions { flex: 0 0 auto; }
   .inline-section-name-edit input { max-width: 145px; }
 }

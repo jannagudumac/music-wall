@@ -254,18 +254,15 @@
 }
 
 @media (max-width: 900px) {
-  .wall-grid { column-gap: 22px; row-gap: 18px; }
+  .wall-grid { column-gap: 22px; }
   .wall-cover { height: 92px; }
 }
 
 @media (max-width: 700px) {
   .page-title { margin-bottom: 24px; }
   .page-title h1 { font-size: 38px; }
-  .page-title > div > p:last-child { font-size: 14px; }
   .wall-grid { grid-template-columns: 1fr; }
-  .wall-cover { height: 92px; }
   .wall-card-content { padding: 13px 15px 14px; }
-  .create-card { min-height: 170px; }
 }
 
 @media (max-width: 480px) {

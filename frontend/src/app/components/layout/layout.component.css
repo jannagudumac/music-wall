@@ -101,7 +101,6 @@
   .sidebar-collapsed .content-shell { margin-left: 0; }
 
   .topbar {
-    height: var(--app-header-height);
     padding: 0 16px;
   }
 
@@ -125,25 +124,22 @@
     white-space: nowrap;
   }
 
-  .page-content,
-  .page-content:has(app-catalog),
-  .page-content:has(app-profile),
-  .page-content:has(app-wall-detail) {
-    padding-bottom: calc(
+  .page-content {
+    padding: 22px 16px calc(
       var(--mobile-bottom-nav-height) +
       var(--mobile-bottom-nav-gap) +
       env(safe-area-inset-bottom)
     );
   }
 
-  .page-content { padding-left: 16px; padding-right: 16px; padding-top: 22px; }
-
   .page-content:has(app-catalog),
   .page-content:has(app-profile),
   .page-content:has(app-wall-detail) {
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 0;
+    padding: 0 0 calc(
+      var(--mobile-bottom-nav-height) +
+      var(--mobile-bottom-nav-gap) +
+      env(safe-area-inset-bottom)
+    );
   }
 
   .back-to-top {

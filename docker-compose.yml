@@ -29,6 +29,46 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:8080/api/catalog/search > /dev/null || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
+
+  catalogue-seed:
+    image: postgres:16-alpine
+    environment:
+      PGUSER: ${DB_USERNAME}
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: music_wall_rncp
+      PGHOST: postgres
+    volumes:
+      - ./database/catalogue_seed.sql:/seed/catalogue_seed.sql:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        artist_count="$$(psql --set=ON_ERROR_STOP=1 --tuples-only --no-align --command='SELECT count(*) FROM artist')"
+        if [ "$$artist_count" = "0" ]; then
+          echo 'Loading the local catalogue seed...'
+          psql --quiet --set=ON_ERROR_STOP=1 --single-transaction --file=/seed/catalogue_seed.sql
+        else
+          echo "Catalogue already contains $$artist_count artists; seed skipped."
+        fi
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "${FRONTEND_PORT:-4200}:80"
+    depends_on:
+      catalogue-seed:
+        condition: service_completed_successfully
 
 volumes:
   music_wall_rncp_data:

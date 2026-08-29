@@ -47,12 +47,15 @@ music-wall/
 │   │   └── exception/    shared HTTP error handling
 │   ├── src/test/         focused unit and integration tests
 │   └── Dockerfile
-├── frontend/src/app/
-│   ├── components/       pages and wall subcomponents
-│   ├── services/         API calls and shared behaviour
-│   ├── models/           TypeScript API shapes
-│   ├── guards/           protected-route check
-│   └── interceptors/     Bearer-token attachment
+├── frontend/
+│   ├── src/app/
+│   │   ├── components/   pages and wall subcomponents
+│   │   ├── services/     API calls and shared behaviour
+│   │   ├── models/       TypeScript API shapes
+│   │   ├── guards/       protected-route check
+│   │   └── interceptors/ Bearer-token attachment
+│   ├── Dockerfile         Angular build + Nginx runtime
+│   └── nginx.conf         SPA fallback and /api proxy
 ├── docs/                 RNCP diagrams and educational guide
 ├── create-database.sql
 └── docker-compose.yml
@@ -66,7 +69,8 @@ For local development:
 - Node.js 20+ and npm
 - PostgreSQL 16 (another supported recent PostgreSQL version should also work)
 
-For the container route, Docker Desktop is enough for the backend and database. Angular remains local by design.
+For the container route, Docker Desktop is enough for the complete application:
+Angular/Nginx, Spring Boot and PostgreSQL.
 
 ## Database isolation and local setup
 
@@ -183,14 +187,31 @@ Copy-Item .env.example .env
 docker compose up --build
 ```
 
-Compose starts two containers:
+Compose builds and starts the complete local application:
 
 - `postgres`: PostgreSQL with database `music_wall_rncp`, exposed on host port `55432` by default;
-- `backend`: the Spring Boot image, exposed on host port `8080`, connecting to PostgreSQL through the Compose service name `postgres`.
+- `backend`: the Spring Boot image, exposed on host port `8080`, connecting to PostgreSQL through the Compose service name `postgres`;
+- `frontend`: the Angular production build served by Nginx on `http://localhost:4200`.
+
+On a fresh database, the one-shot `catalogue-seed` service waits for the backend
+schema and loads `database/catalogue_seed.sql` in a transaction. It skips the seed
+when catalogue artists already exist and exits after the check, leaving the three
+application containers running.
+
+The browser calls `/api` on the same origin as the frontend. Nginx proxies that
+path to `backend:8080` on the private Compose network and falls back to
+`index.html` for Angular routes. Direct `npm start` development still uses
+`http://localhost:8080/api` through the Angular development environment.
 
 The named volume `music_wall_rncp_data` preserves only this RNCP database. Stop containers with `docker compose down`; add `-v` only when you intentionally want to erase that RNCP volume.
 
-An image is the packaged template built from a Dockerfile. A container is a running instance of an image. Compose describes how the two containers, environment variables, ports, health check and private network fit together.
+An image is the packaged template built from a Dockerfile. A container is a running instance of an image. Compose describes how the containers, environment variables, ports, health checks and private network fit together.
+
+This Compose setup is the reproducible local/demo route, not a requirement that
+production use one deployment unit. The static Angular build can later be deployed
+independently to Netlify, while Spring Boot and PostgreSQL are deployed as separate
+Render services. A Netlify redirect or production environment configuration can
+route `/api` to the deployed backend without changing the Angular/Spring architecture.
 
 ## Main API endpoints
 
@@ -208,7 +229,7 @@ All endpoints except registration/login and public catalogue/profile reads requi
 | POST/GET | `/api/walls` | Create/list accessible walls |
 | GET/PUT/DELETE | `/api/walls/{wallId}` | Read or owner-update/delete wall |
 | PUT | `/api/walls/{wallId}/appearance` | Owner changes colour/wallpaper |
-| GET | `/api/walls/{wallId}/members` | Owner reads direct members |
+| GET | `/api/walls/{wallId}/members` | Owner or member reads direct members |
 | GET | `/api/walls/{wallId}/members/search?query=...` | Owner searches candidates |
 | POST | `/api/walls/{wallId}/members` | Owner directly adds a username |
 | DELETE | `/api/walls/{wallId}/members/{username}` | Owner removes a member |
@@ -258,6 +279,22 @@ Before a defense/release, verify:
 6. Remove the member and confirm access is denied.
 7. Update bio and upload a JPEG/PNG/WebP avatar.
 8. From a wall section open catalogue/detail and return to that wall and fragment.
+
+## Submission archive
+
+Create a submission ZIP from a reviewed Git commit rather than compressing the
+entire working directory:
+
+```powershell
+git archive --format=zip --output=music-wall-submission.zip HEAD
+```
+
+`git archive` includes tracked source files and Maven/npm lock and wrapper files,
+but excludes untracked or ignored local data such as `backend/.env`, `.git`,
+`frontend/node_modules`, `frontend/.angular`, `frontend/dist`, Maven `target`
+directories and logs. Check the archive contents before sending it. Never submit
+database credentials or the JWT signing secret; recipients should create their own
+`backend/.env` from `backend/.env.example`.
 
 ## V2 ideas
 

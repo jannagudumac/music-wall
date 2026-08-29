@@ -158,21 +158,6 @@
   white-space: nowrap;
 }
 
-.navigation-badge {
-  align-items: center;
-  background: var(--color-dominant);
-  border-radius: 999px;
-  color: white;
-  display: flex;
-  font-size: 10px;
-  font-weight: 900;
-  height: 24px;
-  justify-content: center;
-  margin-left: auto;
-  min-width: 24px;
-  padding: 0 7px;
-}
-
 .sidebar-footer {
   align-items: center;
   border-top: 1px solid rgba(255, 255, 255, 0.13);
@@ -215,7 +200,6 @@
 .sidebar.collapsed .brand,
 .sidebar.collapsed .navigation-label,
 .sidebar.collapsed .navigation-text,
-.sidebar.collapsed .navigation-badge,
 .sidebar.collapsed .user-information { display: none; }
 
 .sidebar.collapsed .sidebar-header {
@@ -308,15 +292,6 @@
   .sidebar.collapsed .navigation-link.active::before { height: 3px; inset: 0 0 auto; width: auto; }
 
   .navigation-link svg { flex-basis: 29px; height: 29px; padding: 5px; width: 29px; }
-
-  .navigation-badge {
-    height: 16px;
-    min-width: 16px;
-    padding: 0 4px;
-    position: absolute;
-    right: 7px;
-    top: 3px;
-  }
 
   .logout-button { height: 100%; width: 100%; }
 }

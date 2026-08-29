@@ -46,14 +46,16 @@
   border-radius: 50%;
   color: var(--color-dominant);
   display: flex;
-  flex: 0 0 96px;
-  font-size: 42px;
   font-weight: 700;
-  height: 96px;
   justify-content: center;
 }
 
-.large-avatar { width: 96px; }
+.large-avatar {
+  flex: 0 0 96px;
+  font-size: 42px;
+  height: 96px;
+  width: 96px;
+}
 .track-symbol {
   border-radius: 20px;
 }
@@ -273,18 +275,13 @@
   .item-details h1 {
     font-size: 30px;
   }
-  .large-avatar,
-  .track-symbol {
-    flex-basis: 90px;
-    font-size: 40px;
-    height: 90px;
-  }
   .large-avatar {
     flex: 0 0 90px;
+    font-size: 40px;
+    height: 90px;
     width: 90px;
   }
   .track-details {
-    display: grid;
     gap: 0 10px;
     grid-template-areas:
       "icon type"
@@ -293,7 +290,6 @@
       "facts facts"
       "genres genres";
     grid-template-columns: 44px minmax(0, 1fr);
-    padding: 20px;
   }
   .track-details .track-symbol {
     border-radius: 9px;

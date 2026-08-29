@@ -81,7 +81,7 @@ Key cardinality explanations:
 
 ```text
 APP_USER(#id, username UQ, password, role, bio, avatar_image, avatar_content_type)
-MUSIC_WALL(#id, name, description, wallpaper, wall_color, owner_id -> APP_USER.id)
+MUSIC_WALL(#id, name, wallpaper, wall_color, owner_id -> APP_USER.id)
 WALL_MEMBERS(#wall_id -> MUSIC_WALL.id, #user_id -> APP_USER.id)
 MUSIC_SECTION(#id, name, note_color, wall_id -> MUSIC_WALL.id)
 MUSIC_ITEM(#id, title, artist, item_type, status,
@@ -104,8 +104,8 @@ TRACK_GENRE(#track_id -> TRACK.id, #genre_id -> GENRE.id)
 
 | Table | Important PostgreSQL columns and constraints |
 |---|---|
-| `app_user` | `id BIGINT identity PK`, `username VARCHAR(255) NOT NULL UNIQUE`, `password VARCHAR(255) NOT NULL`, `role VARCHAR(255) NOT NULL`, `bio VARCHAR(240)`, avatar `BYTEA` |
-| `music_wall` | `id BIGINT identity PK`, `name VARCHAR(100) NOT NULL`, `description VARCHAR(500)`, `wallpaper VARCHAR(20)`, `wall_color VARCHAR(7)`, `owner_id BIGINT NOT NULL FK` |
+| `app_user` | `id BIGINT identity PK`, `username VARCHAR(255) NOT NULL UNIQUE`, `password VARCHAR(255) NOT NULL`, `role VARCHAR(255) NOT NULL`, `bio VARCHAR(300)`, avatar `BYTEA` |
+| `music_wall` | `id BIGINT identity PK`, `name VARCHAR(100) NOT NULL`, `wallpaper VARCHAR(20)`, `wall_color VARCHAR(7)`, `owner_id BIGINT NOT NULL FK` |
 | `wall_members` | `wall_id BIGINT FK`, `user_id BIGINT FK`, composite PK |
 | `music_section` | `id BIGINT identity PK`, `name VARCHAR(80) NOT NULL`, `note_color VARCHAR(20)`, `wall_id BIGINT NOT NULL FK` |
 | `music_item` | `id BIGINT identity PK`, `title VARCHAR(180) NOT NULL`, `artist VARCHAR(150) NOT NULL`, enum strings, required section FK, nullable album/track FKs |
@@ -127,6 +127,8 @@ classDiagram
   class MusicWallEntity {
     Long id
     String name
+    Wallpaper wallpaper
+    String wallColor
     UserEntity owner
     Set~UserEntity~ members
   }
@@ -159,6 +161,8 @@ flowchart LR
 ```
 
 `Owner` and `Collaborator` are business situations, not extra global database roles. The only global Spring authority stays `ROLE_USER`.
+Both the owner and a direct member can read the wall's member list. Searching,
+adding and removing members remains owner-only.
 
 ## 8. Sequence — add a member directly
 
@@ -191,23 +195,52 @@ There is no invitation, pending state or accept/reject branch.
 sequenceDiagram
   actor User
   participant Angular
-  participant Auth as AuthController/AuthService
+  participant Controller as AuthController
+  participant Auth as AuthService
+  participant Manager as AuthenticationManager
+  participant Details as UserDetailsServiceImpl
   participant DB as UserRepository
+  participant Encoder as PasswordEncoder / BCrypt
   participant JWT as JwtUtil
   participant Filter as JwtFilter
   participant Context as SecurityContext
+  participant API as Protected controller/service
+  participant Access as WallAccessService
   User->>Angular: username + password
-  Angular->>Auth: POST /api/auth/login
-  Auth->>DB: find user
-  Auth->>Auth: BCrypt verifies hash
+  Angular->>Controller: POST /api/auth/login
+  Controller->>Auth: login(request)
+  Auth->>Manager: authenticate(username, password)
+  Manager->>Details: loadUserByUsername(username)
+  Details->>DB: findByUsername(username)
+  DB-->>Details: user + BCrypt hash + role
+  Details-->>Manager: UserDetails
+  Manager->>Encoder: matches(raw password, stored hash)
+  Encoder-->>Manager: password valid
+  Manager-->>Auth: authenticated
+  Auth->>DB: findByUsername(username)
+  DB-->>Auth: UserEntity
   Auth->>JWT: generate token (subject=username)
-  JWT-->>Angular: signed JWT
+  JWT-->>Auth: signed JWT
+  Auth-->>Controller: AuthResponse (token, username, role)
+  Controller-->>Angular: 200 JSON
   Angular->>Filter: protected request + Bearer JWT
-  Filter->>JWT: validate signature/expiry
-  Filter->>DB: load user details
+  Filter->>JWT: extract username; verify signed claims
+  Filter->>Details: loadUserByUsername(username)
+  Details->>DB: findByUsername(username)
+  DB-->>Details: user + role
+  Filter->>JWT: validate signature, expiry and username
   Filter->>Context: set authenticated user
-  Filter-->>Angular: request continues to controller
+  Filter->>API: continue filter chain
+  API->>Access: findAccessibleWall or findOwnedWall
+  Access-->>API: authorised wall or 403
+  API-->>Angular: protected response
 ```
+
+`AuthenticationManager` delegates credential verification to Spring Security; the
+application does not compare BCrypt hashes manually during login. For a protected
+wall operation, HTTP authentication is followed by business authorization:
+`findAccessibleWall(...)` accepts the owner or a direct member, while
+`findOwnedWall(...)` accepts only the owner.
 
 ## 10. Frontend component tree
 
@@ -288,8 +321,14 @@ or styling framework is required.
 - **Mockito:** creates those mock repositories/services and verifies their interactions.
 - **Integration test:** starts Spring and crosses controller, validation, security/service and repository layers. `AuthIntegrationTest` uses H2 only for this isolated test profile.
 - **PostgreSQL:** real relational database for development/deployment, foreign keys and trigram catalogue search.
-- **Dockerfile:** repeatable recipe that builds the Spring Boot JAR and its runtime image.
-- **Docker Compose:** starts backend and PostgreSQL together, supplies configuration, creates a network and waits for database health.
+- **Dockerfiles:** repeatable multi-stage recipes for the Spring Boot JAR/runtime
+  image and the Angular production build/Nginx runtime image.
+- **Docker Compose:** starts Angular/Nginx, Spring Boot and PostgreSQL together,
+  supplies configuration, creates a private network, waits for health checks and
+  loads the reference catalogue once on a fresh schema.
+- **Separate production deployment:** the local Compose topology does not force a
+  single production deployment unit. Static Angular assets can be hosted on
+  Netlify while Spring Boot and PostgreSQL remain separate Render services.
 
 ## 12. Important classes: why they exist and removal consequence
 

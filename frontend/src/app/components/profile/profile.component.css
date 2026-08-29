@@ -88,7 +88,6 @@
 .security-section h2,
 .security-section h3 {
   color: #172033;
-  font-family: "Nunito", sans-serif;
 }
 
 .security-section h2 { font-size: 20px; margin: 0; }
@@ -168,7 +167,6 @@
   .security-section { padding: 18px; width: 100%; }
   .security-summary { align-items: flex-start; flex-direction: column; gap: 12px; }
   .security-summary button { width: 100%; }
-  .password-form { width: 100%; }
   .password-actions { flex-direction: column-reverse; }
   .password-actions button { width: 100%; }
 }

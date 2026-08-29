@@ -26,7 +26,7 @@
   word-break: break-word;
 }
 
-.wall-title-line { align-items: center; display: flex; gap: 5px; }
+.wall-title-line { align-items: center; display: flex; gap: 5px; min-width: 0; }
 
 .wall-field-inline {
   align-items: center;
@@ -36,8 +36,6 @@
   min-width: 0;
   width: 100%;
 }
-
-.wall-title-line { min-width: 0; }
 
 .wall-field-actions {
   align-items: center;
@@ -275,30 +273,6 @@ button {
 @media (max-width: 650px) {
   .wall-header h1 { font-size: 18px; }
 
-  .wall-heading-row {
-    gap: 8px;
-  }
-
-  .wall-title h1 {
-    text-overflow: clip;
-    white-space: normal;
-  }
-
-  .wall-field-inline {
-    align-items: center;
-    min-width: 0;
-    width: 100%;
-  }
-
-  .wall-field-inline input {
-    min-width: 0;
-    width: 100%;
-  }
-
-  .wall-field-actions {
-    flex: 0 0 auto;
-  }
-
   .wall-field-actions button {
     height: 36px;
     min-height: 36px;
@@ -312,7 +286,6 @@ button {
     gap: 6px;
     justify-content: flex-end;
   }
-  .wall-header-actions button { white-space: nowrap; }
 
   .appearance-popover {
     left: 16px;

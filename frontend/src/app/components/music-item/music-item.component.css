@@ -108,3 +108,45 @@ button {
   font-weight: 600;
   padding: 9px 11px;
 }
+
+@media (max-width: 480px) {
+  .music-item {
+    align-items: stretch;
+    gap: 8px;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 10px;
+  }
+
+  .item-main {
+    align-items: start;
+    display: grid;
+    gap: 9px;
+    grid-template-columns: 46px minmax(0, 1fr);
+  }
+
+  .item-main > div {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .type-badge {
+    flex-basis: auto;
+    height: 46px;
+    width: 46px;
+  }
+
+  .item-main h3,
+  .item-main p {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .item-actions {
+    grid-column: 1;
+    gap: 6px;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .item-actions .status-button { padding-inline: 7px; }
+}

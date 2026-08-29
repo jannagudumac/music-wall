@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -29,6 +29,7 @@ export class ProfileComponent implements OnInit {
   passwordSaving = false;
   passwordMessage = '';
   passwordError = '';
+  isPublicProfileRoute = false;
   passwordModel = {
     currentPassword: '',
     newPassword: '',
@@ -37,6 +38,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private location: Location,
     private profileService: ProfileService,
     public authService: AuthService
   ) {
@@ -45,8 +47,13 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.profile = null;
+      this.isPublicProfileRoute = params.has('username');
       this.load(params.get('username') || this.authService.getUsername() || '');
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   get isOwnProfile(): boolean {

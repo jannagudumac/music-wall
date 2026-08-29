@@ -1,4 +1,12 @@
 <section class="profile-page">
+  <button
+    *ngIf="isPublicProfileRoute"
+    type="button"
+    class="profile-back-link"
+    (click)="goBack()">
+    &larr; Back
+  </button>
+
   <p *ngIf="errorMessage" class="message-error">{{ errorMessage }}</p>
   <div *ngIf="loading" class="message-loading message-empty">Loading profile...</div>
 

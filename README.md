@@ -6,7 +6,8 @@ This repository is the deliberately simplified RNCP version. It favours a conven
 
 ## MVP
 
-- Register, log in and log out with a unique username and password.
+- Register, log in and log out with a unique username and a password of at
+  least eight characters.
 - Authenticate protected requests with a JWT; store passwords as BCrypt hashes.
 - View and edit a simple profile with bio and avatar.
 - Create, view, rename, style and delete owned music walls.
@@ -164,7 +165,10 @@ cd backend
 .\mvnw.cmd test
 ```
 
-The integration test uses an in-memory H2 database only under the `test` profile. It covers registration through Controller → Service → Repository, checks persistence and verifies that BCrypt—not plain text—is stored.
+The two integration test classes use an in-memory H2 database only under the
+`test` profile. Their four tests cover registration and BCrypt persistence,
+authenticated password changes, the 300-character bio boundary, and Wallpaper
+enum JSON validation and string persistence.
 
 Frontend test and production build:
 

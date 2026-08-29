@@ -30,7 +30,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O - http://localhost:8080/api/catalog/search > /dev/null || exit 1"]
+      test: ["CMD-SHELL", "wget -q -O - 'http://localhost:8080/api/catalog/search?query=__healthcheck__' > /dev/null || exit 1"]
       interval: 5s
       timeout: 3s
       retries: 20

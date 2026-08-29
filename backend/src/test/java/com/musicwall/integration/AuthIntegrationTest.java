@@ -33,6 +33,16 @@ class AuthIntegrationTest {
 
     @Test
     void registrationCrossesControllerServiceSecurityAndRepositoryLayers() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "short_password_user",
+                                  "password": "short77"
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
+
         String responseBody = mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -81,6 +91,17 @@ class AuthIntegrationTest {
                 .getResponse()
                 .getContentAsString();
         String token = objectMapper.readTree(registrationBody).get("token").asText();
+
+        mockMvc.perform(put("/api/profiles/me/password")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "currentPassword": "password1",
+                                  "newPassword": "short77"
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
 
         mockMvc.perform(put("/api/profiles/me/password")
                         .header("Authorization", "Bearer " + token)

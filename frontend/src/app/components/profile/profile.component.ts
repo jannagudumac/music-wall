@@ -125,7 +125,7 @@ export class ProfileComponent implements OnInit {
   changePassword(): void {
     const currentPassword = this.passwordModel.currentPassword;
     const newPassword = this.passwordModel.newPassword;
-    if (!currentPassword || newPassword.length < 6) return;
+    if (!currentPassword || newPassword.length < 8) return;
     if (newPassword !== this.passwordModel.confirmPassword) {
       this.passwordError = 'New passwords do not match.';
       return;

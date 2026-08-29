@@ -306,7 +306,10 @@ or styling framework is required.
 ### Security concepts
 
 - **JWT:** signed, time-limited token containing the username subject. It proves the token was issued by this backend; it is not encrypted storage for secrets.
-- **BCrypt:** slow salted password hashing. Verification compares a candidate to the hash; the original password is not recoverable.
+- **Password validation and BCrypt:** registration and password change require
+  at least eight characters. Accepted passwords are stored as slow salted
+  BCrypt hashes; verification compares a candidate to the hash and the original
+  password is not recoverable.
 - **Spring Security:** filter chain, authentication manager, password encoder and endpoint rules.
 - **JwtFilter:** runs before username/password security for each request, validates the Bearer token and loads user details. Removing it means JWTs no longer authenticate requests.
 - **SecurityContext:** request-local place where Spring stores the authenticated principal used by controllers as `Authentication`.
@@ -315,11 +318,26 @@ or styling framework is required.
 - **XSS:** Angular interpolation escapes text by default. Avoiding unsafe HTML rendering helps keep stored user text from becoming executable script.
 - **SQL injection:** repositories bind parameters rather than concatenating user input into SQL.
 
+### HTTP security headers
+
+- **`X-Content-Type-Options: nosniff`:** Spring Security prevents browsers from MIME-sniffing a response as a different content type.
+- **`X-Frame-Options: DENY`:** Spring Security prevents the application from being framed, reducing clickjacking risk.
+- **`Referrer-Policy: strict-origin-when-cross-origin`:** Nginx limits the referrer information sent with cross-origin requests.
+- **`Permissions-Policy`:** Nginx disables the unused camera, microphone and geolocation browser capabilities.
+- **Nginx server tokens:** `server_tokens off` prevents the exact Nginx version from being exposed.
+
+CSP is not currently configured. HSTS is intentionally left for verification on the deployed HTTPS response.
+
 ### Testing and deployment concepts
 
 - **Unit test:** checks one service in isolation with mocked dependencies. It is fast and pinpoints a business rule.
 - **Mockito:** creates those mock repositories/services and verifies their interactions.
-- **Integration test:** starts Spring and crosses controller, validation, security/service and repository layers. `AuthIntegrationTest` uses H2 only for this isolated test profile.
+- **Integration test:** starts Spring and crosses controller, validation,
+  security/service and repository layers. `AuthIntegrationTest` and
+  `WallpaperIntegrationTest` use H2 only for this isolated test profile. Their
+  four tests cover registration and BCrypt persistence, authenticated password
+  changes, the 300-character bio boundary, and Wallpaper enum JSON validation
+  and string persistence.
 - **PostgreSQL:** real relational database for development/deployment, foreign keys and trigram catalogue search.
 - **Dockerfiles:** repeatable multi-stage recipes for the Spring Boot JAR/runtime
   image and the Angular production build/Nginx runtime image.
@@ -399,7 +417,11 @@ Auth DTOs (`RegisterRequest`, `LoginRequest`, `AuthResponse`) define credentials
   is imposed because live, remastered and re-recorded versions can share a title.
 - MusicBrainz prepared the initial reference catalogue but is not part of the
   normal application, MCD, REST API, or Spring configuration.
-- H2 is limited to a simple registration integration test; PostgreSQL-specific trigram behaviour remains covered by the real database/manual Docker flow instead of compatibility hacks.
+- H2 is limited to two isolated integration test classes covering registration
+  and BCrypt persistence, authenticated password changes, the bio validation
+  boundary, and Wallpaper enum serialization/persistence. PostgreSQL-specific
+  trigram behaviour remains covered by the real database/manual Docker flow
+  instead of compatibility hacks.
 - `ResponseEntity` is avoided for ordinary DTO JSON but retained for avatar bytes because the response media type is data-dependent.
 
 ## 14. Zoning, wireframes and visual charter evidence

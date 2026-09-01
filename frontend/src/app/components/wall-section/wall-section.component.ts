@@ -10,14 +10,14 @@ import {
 } from '../../models/music-wall.model';
 import { MusicWallService } from '../../services/music-wall.service';
 import {
-  CatalogueSearchComponent,
-  CatalogueSelection
-} from '../catalogue-search/catalogue-search.component';
+  CatalogSearchComponent,
+  CatalogSelection
+} from '../catalog-search/catalog-search.component';
 import { MusicItemComponent } from '../music-item/music-item.component';
 
 @Component({
   selector: 'app-wall-section',
-  imports: [CommonModule, FormsModule, CatalogueSearchComponent, MusicItemComponent],
+  imports: [CommonModule, FormsModule, CatalogSearchComponent, MusicItemComponent],
   templateUrl: './wall-section.component.html',
   styleUrl: './wall-section.component.css'
 })
@@ -69,7 +69,7 @@ export class WallSectionComponent {
     });
   }
 
-  addSelection(selection: CatalogueSelection): void {
+  addSelection(selection: CatalogSelection): void {
     const item = selection.item as Track | Album;
     if (!item.id) return;
     const request: CreateMusicItemRequest = {

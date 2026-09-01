@@ -67,11 +67,11 @@
     <span aria-hidden="true">+</span> Add music
   </button>
 
-  <app-catalogue-search
+  <app-catalog-search
     *ngIf="searchOpen"
     [existingItems]="section.items"
     [saving]="saving"
     (selected)="addSelection($event)"
     (closed)="searchOpen = false">
-  </app-catalogue-search>
+  </app-catalog-search>
 </article>

@@ -16,7 +16,7 @@
           aria-controls="catalog-suggestions"
           [attr.aria-expanded]="showSuggestions"
           [attr.aria-activedescendant]="activeSuggestionIndex >= 0 ? 'catalog-suggestion-' + activeSuggestionIndex : null"
-          placeholder="Search an artist, album or track..."
+          placeholder="Search music..."
           autocomplete="off"
           (focus)="onSearchFocus()"
           (blur)="onSearchBlur()"

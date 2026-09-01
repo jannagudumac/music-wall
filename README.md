@@ -135,7 +135,7 @@ the application.
 
 `WallDetailComponent` owns the complete page layout, wallpaper and section-grid
 positioning. `WallHeaderComponent`, `WallMembersComponent`,
-`WallSectionComponent`, `MusicItemComponent` and `CatalogueSearchComponent`
+`WallSectionComponent`, `MusicItemComponent` and `CatalogSearchComponent`
 each own the CSS for their own markup. Normal Angular style encapsulation is
 used; there is no wall-wide `ViewEncapsulation.None` or styling framework.
 

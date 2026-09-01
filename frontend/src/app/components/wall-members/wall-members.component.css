@@ -4,16 +4,19 @@
 
 .members-inline {
   align-items: center;
-  display: flex;
-  gap: 10px;
+  column-gap: 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  row-gap: 8px;
 }
 
 .members-inline h2 {
   color: #334155;
-  flex: 0 0 auto;
   font-family: "Nunito", sans-serif;
   font-size: 13px;
   font-weight: 800;
+  grid-column: 1;
+  grid-row: 1;
   margin: 0;
 }
 
@@ -25,6 +28,8 @@
   color: white;
   display: inline-flex;
   gap: 7px;
+  grid-column: 2;
+  grid-row: 1;
   padding: 8px 12px;
 }
 
@@ -35,10 +40,13 @@
 
 .member-list {
   display: flex;
-  flex: 1 1 auto;
   flex-wrap: wrap;
   gap: 7px;
+  grid-column: 1 / -1;
+  grid-row: 2;
   margin: 0;
+  min-width: 0;
+  width: 100%;
 }
 
 .member-chip {
@@ -214,54 +222,24 @@ button:disabled { cursor: not-allowed; opacity: 0.55; }
 @media (max-width: 650px) {
   .invite-row { grid-template-columns: 1fr; }
   .invite-row button { width: 100%; }
-  .members-inline { flex-wrap: wrap; }
-  .member-list { min-width: 0; }
-  .add-people-button { flex: 0 0 auto; margin-left: auto; }
   .member-copy { display: none; }
-  .member-chip { padding: 3px; }
-  .member-avatar { height: 27px; width: 27px; }
-}
-
-@media (max-width: 480px) {
-  .members-inline {
-    align-items: center;
-    column-gap: 10px;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    row-gap: 8px;
-  }
-  .members-inline h2 {
-    font-size: 16px;
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .member-list {
-    gap: 5px;
-    grid-column: 1 / -1;
-    grid-row: 2;
-    width: 100%;
-  }
-  .add-people-button {
-    gap: 4px;
-    grid-column: 2;
-    grid-row: 1;
-    margin-left: 0;
-    padding: 7px 10px;
-  }
-  .member-chip {
-    gap: 1px;
-    padding: 2px;
-  }
+  .member-chip { gap: 1px; padding: 2px; }
   .member-chip > a { gap: 0; }
-  .member-avatar {
-    height: 28px;
-    width: 28px;
-  }
+  .member-avatar { height: 28px; width: 28px; }
   .remove-member-button {
     flex-basis: 32px;
     font-size: 15px;
     height: 32px;
     width: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .members-inline h2 { font-size: 16px; }
+  .member-list { gap: 5px; }
+  .add-people-button {
+    gap: 4px;
+    padding: 7px 10px;
   }
   .add-people-label-full { display: none; }
   .add-people-label-compact { display: inline; }

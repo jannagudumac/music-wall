@@ -7,22 +7,22 @@ import { Album, CatalogSearchResult, Track } from '../../models/catalog.model';
 import { MusicItem } from '../../models/music-wall.model';
 import { CatalogService } from '../../services/catalog.service';
 
-export interface CatalogueSelection {
+export interface CatalogSelection {
   type: 'TRACK' | 'ALBUM';
   item: Track | Album;
 }
 
 @Component({
-  selector: 'app-catalogue-search',
+  selector: 'app-catalog-search',
   imports: [CommonModule, FormsModule],
-  templateUrl: './catalogue-search.component.html',
-  styleUrl: './catalogue-search.component.css'
+  templateUrl: './catalog-search.component.html',
+  styleUrl: './catalog-search.component.css'
 })
-export class CatalogueSearchComponent implements OnInit, OnDestroy {
+export class CatalogSearchComponent implements OnInit, OnDestroy {
 
   @Input() existingItems: MusicItem[] = [];
   @Input() saving = false;
-  @Output() selected = new EventEmitter<CatalogueSelection>();
+  @Output() selected = new EventEmitter<CatalogSelection>();
   @Output() closed = new EventEmitter<void>();
 
   query = '';

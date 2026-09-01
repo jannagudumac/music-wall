@@ -227,7 +227,7 @@
   width: calc(100% - 20px);
 }
 
-app-catalogue-search { display: block; }
+app-catalog-search { display: block; }
 
 .add-music-button span {
   font-size: 17px;

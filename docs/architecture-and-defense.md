@@ -256,7 +256,7 @@ AppComponent
         │   ├── WallMembersComponent
         │   └── WallSectionComponent (one per section)
         │       ├── MusicItemComponent (one per item)
-        │       └── CatalogueSearchComponent
+        │       └── CatalogSearchComponent
         ├── CatalogComponent / CatalogDetailComponent
         └── ProfileComponent
 ```
@@ -268,7 +268,7 @@ AppComponent
 `WallDetailComponent` owns only the page container, wallpaper, messages,
 section-grid layout and add-section form. `WallHeaderComponent`,
 `WallMembersComponent`, `WallSectionComponent`, `MusicItemComponent` and
-`CatalogueSearchComponent` each own the styles for their local markup. Normal
+`CatalogSearchComponent` each own the styles for their local markup. Normal
 Angular style encapsulation is used; no `ViewEncapsulation.None`, `::ng-deep`,
 or styling framework is required.
 
@@ -399,7 +399,7 @@ Auth DTOs (`RegisterRequest`, `LoginRequest`, `AuthResponse`) define credentials
 | `WallMembersComponent` | Owner search/add/remove and member list. | Direct collaboration cannot be managed in the UI. |
 | `WallSectionComponent` | One section's editing, items and catalogue chooser. | Section behaviour returns to the oversized page component. |
 | `MusicItemComponent` | One album/track display, status and removal events. | Repeated item behaviour must be duplicated in section markup. |
-| `CatalogueSearchComponent` | Debounced, cancellable album/track selection. | Adding catalogue items becomes unavailable or synchronous/noisy. |
+| `CatalogSearchComponent` | Debounced, cancellable album/track selection. | Adding catalogue items becomes unavailable or synchronous/noisy. |
 | `CatalogComponent`, `CatalogDetailComponent`, `CatalogService` | Browse/detail experience and return context. | Catalogue discovery/navigation disappears. |
 | `ProfileComponent`, `ProfileService` | Bio/avatar page and API calls. | Profile functionality disappears. |
 | `MusicWallService` (Angular) | Typed wall/section/item/member HTTP calls. | Components duplicate endpoints and request code. |

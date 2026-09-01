@@ -10,7 +10,7 @@
   padding: 11px 12px;
 }
 
-.music-item.listened { background: rgba(220, 252, 231, 0.55); }
+.music-item.listened { background: rgba(239, 247, 241, 0.72); }
 
 .item-main {
   align-items: center;
@@ -112,7 +112,7 @@ button {
 @media (max-width: 480px) {
   .music-item {
     align-items: stretch;
-    gap: 8px;
+    gap: 6px;
     grid-template-columns: minmax(0, 1fr);
     padding: 10px;
   }
@@ -143,10 +143,21 @@ button {
 
   .item-actions {
     grid-column: 1;
-    gap: 6px;
-    justify-content: flex-end;
+    gap: 8px;
+    justify-content: flex-start;
     width: 100%;
   }
 
-  .item-actions .status-button { padding-inline: 7px; }
+  .item-actions .status-button {
+    flex: 1 1 auto;
+    font-size: 14px;
+    height: 38px;
+    padding: 6px 10px;
+  }
+
+  .item-actions .item-delete-button {
+    flex: 0 0 38px;
+    height: 38px;
+    width: 38px;
+  }
 }

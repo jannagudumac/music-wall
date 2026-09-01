@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MusicWallDetail, WallWallpaper } from '../../models/music-wall.model';
@@ -13,6 +13,7 @@ import { MusicWallService } from '../../services/music-wall.service';
 })
 export class WallHeaderComponent {
 
+  @ViewChild('appearanceControl') appearanceControl?: ElementRef<HTMLElement>;
   @Input({ required: true }) wall!: MusicWallDetail;
   @Input() isOwner = false;
   @Output() wallChanged = new EventEmitter<MusicWallDetail>();
@@ -31,6 +32,18 @@ export class WallHeaderComponent {
   ];
 
   constructor(private musicWallService: MusicWallService) {
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeAppearanceOnOutsideClick(event: MouseEvent): void {
+    const target = event.target as Node | null;
+    if (
+      this.appearanceOpen &&
+      target &&
+      !this.appearanceControl?.nativeElement.contains(target)
+    ) {
+      this.appearanceOpen = false;
+    }
   }
 
   startEdit(): void {

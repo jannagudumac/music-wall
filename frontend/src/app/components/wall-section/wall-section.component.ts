@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Album, Track } from '../../models/catalog.model';
@@ -23,6 +23,7 @@ import { MusicItemComponent } from '../music-item/music-item.component';
 })
 export class WallSectionComponent {
 
+  @ViewChild('colorPickerControl') colorPickerControl?: ElementRef<HTMLElement>;
   @Input({ required: true }) wallId!: number;
   @Input({ required: true }) section!: MusicSection;
   @Output() deleted = new EventEmitter<number>();
@@ -44,6 +45,18 @@ export class WallSectionComponent {
   ];
 
   constructor(private musicWallService: MusicWallService) {
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeColorPickerOnOutsideClick(event: MouseEvent): void {
+    const target = event.target as Node | null;
+    if (
+      this.colorPickerOpen &&
+      target &&
+      !this.colorPickerControl?.nativeElement.contains(target)
+    ) {
+      this.colorPickerOpen = false;
+    }
   }
 
   startEdit(): void {

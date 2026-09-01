@@ -192,3 +192,80 @@
   .password-actions { flex-direction: column-reverse; }
   .password-actions button { width: 100%; }
 }
+
+@media (max-width: 480px) {
+  .profile-page {
+    padding: 10px 14px;
+  }
+
+  .profile-back-link {
+    font-size: 0.8125rem;
+    margin-bottom: 8px;
+  }
+
+  .profile-card {
+    border-radius: 16px;
+    gap: 8px;
+    min-height: 0;
+    padding: 16px 14px;
+  }
+
+  .hero-pattern {
+    font-size: 56px;
+    right: 10px;
+    top: -20px;
+  }
+
+  .avatar {
+    border-width: 3px;
+    flex-basis: 64px;
+    font-size: 30px;
+    height: 64px;
+    width: 64px;
+  }
+
+  .profile-identity > p:not(.profile-bio) {
+    font-size: 0.6875rem;
+  }
+
+  .profile-identity h1 { font-size: 2rem; }
+
+  .profile-bio {
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+
+  .edit-profile-button {
+    border-radius: 9px;
+    min-height: 38px;
+    padding: 6px 12px;
+  }
+
+  .security-section {
+    margin-top: 12px;
+    padding: 14px;
+  }
+
+  .security-section h2 {
+    font-size: 1.125rem;
+  }
+
+  .security-section h3 {
+    font-size: 0.875rem;
+  }
+
+  .security-summary {
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+
+  .security-summary p {
+    font-size: 0.75rem;
+  }
+
+  .security-summary button {
+    min-height: 38px;
+    padding: 7px 12px;
+  }
+}

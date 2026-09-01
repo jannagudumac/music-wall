@@ -266,7 +266,18 @@
 }
 
 @media (max-width: 480px) {
-  .page-title { margin-bottom: 18px; }
+  .page-title { margin: 0 2px 14px; }
+  .page-title .page-label {
+    font-size: 11px;
+    letter-spacing: .16em;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .page-title h1 { font-size: 2rem; line-height: .95;  }
+  .page-title > div > p:last-child {
+    line-height: 1.25;
+    margin-top: 4px;
+  }
   .wall-grid { row-gap: 14px; }
   .wall-cover { height: 84px; }
   .wall-card-content { padding: 12px 13px 13px; }

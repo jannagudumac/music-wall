@@ -154,6 +154,16 @@
   }
 }
 
+@media (max-width: 480px) {
+  .page-content:has(app-walls) {
+    padding-top: 20px;
+  }
+
+  .page-content:has(app-catalog-detail) {
+    padding-top: 8px;
+  }
+}
+
 @media (max-width: 340px) {
   .application-layout { --app-header-height: 45px; }
 

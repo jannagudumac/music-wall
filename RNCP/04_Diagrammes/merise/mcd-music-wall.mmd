@@ -1,0 +1,76 @@
+---
+config:
+  theme: base
+  look: classic
+  fontFamily: Arial, sans-serif
+  htmlLabels: true
+  themeVariables:
+    primaryColor: "#fffaf0"
+    primaryTextColor: "#123f4a"
+    primaryBorderColor: "#2b8992"
+    lineColor: "#486b73"
+    secondaryColor: "#dff4f6"
+    tertiaryColor: "#ffebe7"
+  flowchart:
+    curve: linear
+    nodeSpacing: 26
+    rankSpacing: 48
+---
+flowchart LR
+  U["APP_USER<br/># id<br/>username<br/>password (BCrypt)<br/>role<br/>bio<br/>avatar_image<br/>avatar_content_type"]
+  W["MUSIC_WALL<br/># id<br/>name<br/>wallpaper<br/>wall_color"]
+  S["MUSIC_SECTION<br/># id<br/>name<br/>note_color"]
+  I["MUSIC_ITEM<br/># id<br/>title<br/>artist<br/>item_type<br/>status"]
+
+  AR["ARTIST<br/># id<br/>name"]
+  AL["ALBUM<br/># id<br/>title<br/>release_year<br/>cover_url"]
+  T["TRACK<br/># id<br/>title<br/>duration_seconds"]
+  G["GENRE<br/># id<br/>name"]
+
+  OWN{"OWNS"}
+  MEMBER{"PARTICIPATES_IN"}
+  STRUCTURE{"STRUCTURES"}
+  CONTAIN{"CONTAINS"}
+  RELEASE{"RELEASES"}
+  PERFORM{"PERFORMS"}
+  TRACK_OF{"BELONGS_TO"}
+  ALBUM_STYLE{"CLASSIFIES_ALBUM"}
+  TRACK_STYLE{"CLASSIFIES_TRACK"}
+  PICK_ALBUM{"SELECTS_ALBUM"}
+  PICK_TRACK{"SELECTS_TRACK"}
+
+  U ---|"0,N"| OWN
+  OWN ---|"1,1"| W
+  U ---|"0,N"| MEMBER
+  MEMBER ---|"0,N"| W
+  W ---|"0,N"| STRUCTURE
+  STRUCTURE ---|"1,1"| S
+  S ---|"0,N"| CONTAIN
+  CONTAIN ---|"1,1"| I
+
+  AR ---|"0,N"| RELEASE
+  RELEASE ---|"1,1"| AL
+  AR ---|"0,N"| PERFORM
+  PERFORM ---|"1,1"| T
+  AL ---|"0,N"| TRACK_OF
+  TRACK_OF ---|"0,1"| T
+  AL ---|"0,N"| ALBUM_STYLE
+  ALBUM_STYLE ---|"0,N"| G
+  T ---|"0,N"| TRACK_STYLE
+  TRACK_STYLE ---|"0,N"| G
+
+  AL ---|"0,N"| PICK_ALBUM
+  PICK_ALBUM ---|"0,1"| I
+  T ---|"0,N"| PICK_TRACK
+  PICK_TRACK ---|"0,1"| I
+
+  XOR["Integrity constraint: each MUSIC_ITEM must use<br/>exactly one of SELECTS_ALBUM or SELECTS_TRACK (XOR)."]
+  XOR -.-> PICK_ALBUM
+  XOR -.-> PICK_TRACK
+
+  classDef entity fill:#fffaf0,stroke:#2b8992,stroke-width:2px,color:#123f4a;
+  classDef association fill:#ffebe7,stroke:#f56b61,stroke-width:2px,color:#123f4a;
+  classDef note fill:#f4f0ff,stroke:#8d81b8,stroke-width:1px,color:#273044;
+  class U,W,S,I,AR,AL,T,G entity;
+  class OWN,MEMBER,STRUCTURE,CONTAIN,RELEASE,PERFORM,TRACK_OF,ALBUM_STYLE,TRACK_STYLE,PICK_ALBUM,PICK_TRACK association;
+  class XOR note;

@@ -1,0 +1,105 @@
+---
+config:
+  theme: base
+  look: classic
+  fontFamily: Arial, sans-serif
+  htmlLabels: false
+  themeVariables:
+    primaryColor: "#fffaf0"
+    primaryTextColor: "#123f4a"
+    primaryBorderColor: "#2b8992"
+    lineColor: "#486b73"
+---
+erDiagram
+  APP_USER ||--o{ MUSIC_WALL : "owner_id"
+  APP_USER ||--o{ WALL_MEMBERS : "user_id"
+  MUSIC_WALL ||--o{ WALL_MEMBERS : "wall_id"
+  MUSIC_WALL ||--o{ MUSIC_SECTION : "wall_id"
+  MUSIC_SECTION ||--o{ MUSIC_ITEM : "section_id"
+
+  ARTIST ||--o{ ALBUM : "artist_id"
+  ARTIST ||--o{ TRACK : "artist_id"
+  ALBUM o|--o{ TRACK : "album_id nullable"
+  ALBUM ||--o{ ALBUM_GENRE : "album_id"
+  GENRE ||--o{ ALBUM_GENRE : "genre_id"
+  TRACK ||--o{ TRACK_GENRE : "track_id"
+  GENRE ||--o{ TRACK_GENRE : "genre_id"
+  ALBUM o|--o{ MUSIC_ITEM : "catalog_album_id"
+  TRACK o|--o{ MUSIC_ITEM : "catalog_track_id"
+
+  APP_USER {
+    bigint id PK "IDENTITY"
+    varchar username UK "255, NOT NULL"
+    varchar password "255, NOT NULL"
+    varchar role "255, NOT NULL"
+    varchar bio "300, NULL"
+    bytea avatar_image "NULL"
+    varchar avatar_content_type "255, NULL"
+  }
+
+  MUSIC_WALL {
+    bigint id PK "IDENTITY"
+    varchar name "100, NOT NULL"
+    varchar wallpaper "20, NULL"
+    varchar wall_color "7, NULL"
+    bigint owner_id FK "NOT NULL"
+  }
+
+  WALL_MEMBERS {
+    bigint wall_id PK,FK "NOT NULL"
+    bigint user_id PK,FK "NOT NULL"
+  }
+
+  MUSIC_SECTION {
+    bigint id PK "IDENTITY"
+    varchar name "80, NOT NULL"
+    varchar note_color "20, NULL"
+    bigint wall_id FK "NOT NULL"
+  }
+
+  MUSIC_ITEM {
+    bigint id PK "IDENTITY"
+    varchar title "180, NOT NULL"
+    varchar artist "150, NOT NULL"
+    varchar item_type "255, NOT NULL"
+    varchar status "255, NOT NULL"
+    bigint section_id FK "NOT NULL"
+    bigint catalog_track_id FK "NULL, XOR"
+    bigint catalog_album_id FK "NULL, XOR"
+  }
+
+  ARTIST {
+    bigint id PK "IDENTITY"
+    varchar name UK "150, NOT NULL"
+  }
+
+  ALBUM {
+    bigint id PK "IDENTITY"
+    varchar title "180, NOT NULL, UQ with artist_id"
+    integer release_year "NULL"
+    varchar cover_url "500, NULL"
+    bigint artist_id FK "NOT NULL, UQ with title"
+  }
+
+  TRACK {
+    bigint id PK "IDENTITY"
+    varchar title "180, NOT NULL"
+    integer duration_seconds "NULL"
+    bigint artist_id FK "NOT NULL"
+    bigint album_id FK "NULL"
+  }
+
+  GENRE {
+    bigint id PK "IDENTITY"
+    varchar name UK "80, NOT NULL"
+  }
+
+  ALBUM_GENRE {
+    bigint album_id PK,FK "NOT NULL"
+    bigint genre_id PK,FK "NOT NULL"
+  }
+
+  TRACK_GENRE {
+    bigint track_id PK,FK "NOT NULL"
+    bigint genre_id PK,FK "NOT NULL"
+  }

@@ -1,0 +1,56 @@
+---
+config:
+  theme: base
+  look: classic
+  fontFamily: Arial, sans-serif
+  htmlLabels: true
+  themeVariables:
+    primaryColor: "#fffaf0"
+    primaryTextColor: "#123f4a"
+    primaryBorderColor: "#2b8992"
+    lineColor: "#486b73"
+    secondaryColor: "#dff4f6"
+  flowchart:
+    curve: linear
+    nodeSpacing: 32
+    rankSpacing: 62
+---
+flowchart LR
+  U["APP_USER<br/># id<br/>username [UQ]<br/>password<br/>role<br/>bio<br/>avatar_image<br/>avatar_content_type"]
+  W["MUSIC_WALL<br/># id<br/>name<br/>wallpaper<br/>wall_color<br/>owner_id [FK → APP_USER.id]"]
+  WM["WALL_MEMBERS<br/># wall_id [FK → MUSIC_WALL.id]<br/># user_id [FK → APP_USER.id]"]
+  S["MUSIC_SECTION<br/># id<br/>name<br/>note_color<br/>wall_id [FK → MUSIC_WALL.id]"]
+  I["MUSIC_ITEM<br/># id<br/>title<br/>artist<br/>item_type<br/>status<br/>section_id [FK → MUSIC_SECTION.id]<br/>catalog_track_id [FK → TRACK.id, NULL]<br/>catalog_album_id [FK → ALBUM.id, NULL]"]
+
+  AR["ARTIST<br/># id<br/>name [UQ]"]
+  AL["ALBUM<br/># id<br/>title<br/>release_year<br/>cover_url<br/>artist_id [FK → ARTIST.id]<br/>[UQ artist_id + title]"]
+  T["TRACK<br/># id<br/>title<br/>duration_seconds<br/>artist_id [FK → ARTIST.id]<br/>album_id [FK → ALBUM.id, NULL]"]
+  G["GENRE<br/># id<br/>name [UQ]"]
+  AG["ALBUM_GENRE<br/># album_id [FK → ALBUM.id]<br/># genre_id [FK → GENRE.id]"]
+  TG["TRACK_GENRE<br/># track_id [FK → TRACK.id]<br/># genre_id [FK → GENRE.id]"]
+
+  U -->|"1 — 0,N owner"| W
+  U -->|"1 — 0,N"| WM
+  W -->|"1 — 0,N"| WM
+  W -->|"1 — 0,N"| S
+  S -->|"1 — 0,N"| I
+
+  AR -->|"1 — 0,N"| AL
+  AR -->|"1 — 0,N"| T
+  AL -->|"0,1 — 0,N"| T
+  AL -->|"1 — 0,N"| AG
+  G -->|"1 — 0,N"| AG
+  T -->|"1 — 0,N"| TG
+  G -->|"1 — 0,N"| TG
+  AL -.->|"0,1 per item"| I
+  T -.->|"0,1 per item"| I
+
+  XOR["Logical XOR rule:<br/>exactly one of catalog_track_id<br/>or catalog_album_id must be set."]
+  XOR -.-> I
+
+  classDef relation fill:#fffaf0,stroke:#2b8992,stroke-width:2px,color:#123f4a;
+  classDef junction fill:#dff4f6,stroke:#2b8992,stroke-width:2px,color:#123f4a;
+  classDef note fill:#f4f0ff,stroke:#8d81b8,stroke-width:1px,color:#273044;
+  class U,W,S,I,AR,AL,T,G relation;
+  class WM,AG,TG junction;
+  class XOR note;

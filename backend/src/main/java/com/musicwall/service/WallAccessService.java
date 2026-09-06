@@ -1,11 +1,13 @@
 package com.musicwall.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.musicwall.entity.MusicWallEntity;
 import com.musicwall.exception.ForbiddenException;
 import com.musicwall.exception.ResourceNotFoundException;
 import com.musicwall.repository.MusicWallRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,7 +30,8 @@ public class WallAccessService {
     public MusicWallEntity findOwnedWall(String username, Long wallId) {
         MusicWallEntity wall = findWall(wallId);
         if (!isOwner(wall, username)) {
-            throw new ForbiddenException("Only the wall owner can perform this action");
+            throw new ForbiddenException(
+                "Only the wall owner can perform this action");
         }
         return wall;
     }

@@ -1,19 +1,19 @@
 package com.musicwall.service;
 
-import com.musicwall.entity.MusicWallEntity;
-import com.musicwall.entity.UserEntity;
-import com.musicwall.exception.ForbiddenException;
-import com.musicwall.repository.MusicWallRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.musicwall.entity.MusicWallEntity;
+import com.musicwall.entity.UserEntity;
+import com.musicwall.exception.ForbiddenException;
+import com.musicwall.repository.MusicWallRepository;
 
 @ExtendWith(MockitoExtension.class)
 class WallAccessServiceTest {
@@ -31,8 +31,12 @@ class WallAccessServiceTest {
         when(wallRepository.findById(10L)).thenReturn(Optional.of(wall));
         WallAccessService service = new WallAccessService(wallRepository);
 
-        assertEquals(wall, service.findAccessibleWall("alice", 10L));
-        assertThrows(ForbiddenException.class, () -> service.findOwnedWall("alice", 10L));
+        assertEquals(
+            wall, 
+            service.findAccessibleWall("alice", 10L));
+        assertThrows(
+            ForbiddenException.class, () -> 
+            service.findOwnedWall("alice", 10L));
     }
 
     private UserEntity user(String username) {
@@ -41,3 +45,4 @@ class WallAccessServiceTest {
         return user;
     }
 }
+

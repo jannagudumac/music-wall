@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Страница-1" id="P-vgFuSEsndUTafjl9q0">
-    <mxGraphModel dx="2747" dy="1937" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="2116" dy="1493" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -54,6 +54,10 @@
         </mxCell>
         <mxCell id="VRxWPPxQKa45e3MicAKN-39" edge="1" parent="1" source="ueq3dcphw5wxg_Eym7oa-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="VRxWPPxQKa45e3MicAKN-16">
           <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="142.5" y="20" />
+              <mxPoint x="85" y="20" />
+            </Array>
             <mxPoint x="24.490000000000236" y="-100" as="sourcePoint" />
             <mxPoint x="-29.999999999999773" y="25.050000000000182" as="targetPoint" />
           </mxGeometry>

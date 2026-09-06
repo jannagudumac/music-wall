@@ -1,31 +1,29 @@
 package com.musicwall.service;
 
-import com.musicwall.dto.AlbumDTO;
-import com.musicwall.dto.ArtistDTO;
-import com.musicwall.dto.CatalogSearchDTO;
-import com.musicwall.dto.CatalogSuggestionDTO;
-import com.musicwall.dto.TrackDTO;
-import com.musicwall.entity.AlbumEntity;
-import com.musicwall.entity.ArtistEntity;
-import com.musicwall.entity.TrackEntity;
-import com.musicwall.repository.AlbumRepository;
-import com.musicwall.repository.ArtistRepository;
-import com.musicwall.repository.TrackRepository;
-import com.musicwall.repository.GenreRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.musicwall.dto.AlbumDTO;
+import com.musicwall.dto.CatalogSearchDTO;
+import com.musicwall.dto.CatalogSuggestionDTO;
+import com.musicwall.entity.AlbumEntity;
+import com.musicwall.entity.ArtistEntity;
+import com.musicwall.entity.TrackEntity;
+import com.musicwall.repository.AlbumRepository;
+import com.musicwall.repository.ArtistRepository;
+import com.musicwall.repository.GenreRepository;
+import com.musicwall.repository.TrackRepository;
 
 @ExtendWith(MockitoExtension.class)
 class CatalogServiceTest {

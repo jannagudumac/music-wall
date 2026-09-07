@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { Album, Track } from '../../models/catalog.model';
 import {
-  CreateMusicItemRequest,
+  MusicItem,
   MusicSection,
   SectionNoteColor
 } from '../../models/music-wall.model';
@@ -85,7 +85,7 @@ export class WallSectionComponent {
   addSelection(selection: CatalogSelection): void {
     const item = selection.item as Track | Album;
     if (!item.id) return;
-    const request: CreateMusicItemRequest = {
+    const request: Pick<MusicItem, 'status' | 'catalogTrackId' | 'catalogAlbumId'> = {
       status: 'TO_LISTEN',
       catalogTrackId: selection.type === 'TRACK' ? item.id : null,
       catalogAlbumId: selection.type === 'ALBUM' ? item.id : null

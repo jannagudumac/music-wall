@@ -1,6 +1,5 @@
 package com.musicwall.controller;
 
-import com.musicwall.dto.CreateMusicSectionRequest;
 import com.musicwall.dto.MusicSectionDTO;
 import com.musicwall.service.MusicSectionService;
 import jakarta.validation.Valid;
@@ -30,7 +29,7 @@ public class MusicSectionController {
     public MusicSectionDTO createSection(
             @PathVariable Long wallId,
             Authentication authentication,
-            @Valid @RequestBody CreateMusicSectionRequest request
+            @Valid @RequestBody MusicSectionDTO request
     ) {
         return musicSectionService.createSection(
                 authentication.getName(),
@@ -44,7 +43,7 @@ public class MusicSectionController {
             @PathVariable Long wallId,
             @PathVariable Long sectionId,
             Authentication authentication,
-            @Valid @RequestBody CreateMusicSectionRequest request
+            @Valid @RequestBody MusicSectionDTO request
     ) {
         return musicSectionService.updateSection(
                 authentication.getName(),

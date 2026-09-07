@@ -182,7 +182,7 @@ sequenceDiagram
   S->>W: findOwnedWall(...)
   W->>R: load wall and verify owner
   S->>R: load user and save wall_members link
-  S-->>C: WallMemberDTO
+  S-->>C: UserDTO
   C-->>A: 201 JSON
   A-->>UI: refresh member list
 ```

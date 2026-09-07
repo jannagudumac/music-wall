@@ -4,15 +4,11 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import {
-  CreateMusicItemRequest,
-  CreateMusicSectionRequest,
-  CreateMusicWallRequest,
   MusicItem,
   MusicSection,
   MusicWall,
   MusicWallDetail,
-  UserSearchResult,
-  WallMember
+  User
 } from '../models/music-wall.model';
 
 @Injectable({
@@ -29,7 +25,7 @@ export class MusicWallService {
     return this.http.get<MusicWall[]>(this.apiUrl);
   }
 
-  createWall(request: CreateMusicWallRequest): Observable<MusicWall> {
+  createWall(request: Pick<MusicWall, 'name' | 'wallpaper' | 'wallColor'>): Observable<MusicWall> {
     return this.http.post<MusicWall>(this.apiUrl, request);
   }
 
@@ -37,13 +33,16 @@ export class MusicWallService {
     return this.http.get<MusicWallDetail>(this.apiUrl + '/' + id);
   }
 
-  updateWall(id: number, request: CreateMusicWallRequest): Observable<MusicWall> {
+  updateWall(
+    id: number,
+    request: Pick<MusicWall, 'name' | 'wallpaper' | 'wallColor'>
+  ): Observable<MusicWall> {
     return this.http.put<MusicWall>(this.apiUrl + '/' + id, request);
   }
 
   updateWallAppearance(
     id: number,
-    request: Pick<CreateMusicWallRequest, 'wallpaper' | 'wallColor'>
+    request: Pick<MusicWall, 'wallpaper' | 'wallColor'>
   ): Observable<MusicWall> {
     return this.http.put<MusicWall>(this.apiUrl + '/' + id + '/appearance', request);
   }
@@ -52,20 +51,20 @@ export class MusicWallService {
     return this.http.delete<void>(this.apiUrl + '/' + id);
   }
 
-  getMembers(wallId: number): Observable<WallMember[]> {
-    return this.http.get<WallMember[]>(`${this.apiUrl}/${wallId}/members`);
+  getMembers(wallId: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/${wallId}/members`);
   }
 
-  searchMemberCandidates(wallId: number, query: string): Observable<UserSearchResult[]> {
+  searchMemberCandidates(wallId: number, query: string): Observable<User[]> {
     const params = new HttpParams().set('query', query);
-    return this.http.get<UserSearchResult[]>(
+    return this.http.get<User[]>(
       `${this.apiUrl}/${wallId}/members/search`,
       { params }
     );
   }
 
-  addMember(wallId: number, username: string): Observable<WallMember> {
-    return this.http.post<WallMember>(
+  addMember(wallId: number, username: string): Observable<User> {
+    return this.http.post<User>(
       `${this.apiUrl}/${wallId}/members`,
       { username }
     );
@@ -79,7 +78,7 @@ export class MusicWallService {
 
   createSection(
     wallId: number,
-    request: CreateMusicSectionRequest
+    request: Pick<MusicSection, 'name' | 'noteColor'>
   ): Observable<MusicSection> {
     return this.http.post<MusicSection>(
       this.apiUrl + '/' + wallId + '/sections',
@@ -90,7 +89,7 @@ export class MusicWallService {
   updateSection(
     wallId: number,
     sectionId: number,
-    request: CreateMusicSectionRequest
+    request: Pick<MusicSection, 'name' | 'noteColor'>
   ): Observable<MusicSection> {
     return this.http.put<MusicSection>(
       this.apiUrl + '/' + wallId + '/sections/' + sectionId,
@@ -107,7 +106,7 @@ export class MusicWallService {
   createItem(
     wallId: number,
     sectionId: number,
-    request: CreateMusicItemRequest
+    request: Pick<MusicItem, 'status' | 'catalogTrackId' | 'catalogAlbumId'>
   ): Observable<MusicItem> {
     return this.http.post<MusicItem>(
       this.itemUrl(wallId, sectionId),
@@ -119,7 +118,7 @@ export class MusicWallService {
     wallId: number,
     sectionId: number,
     itemId: number,
-    request: CreateMusicItemRequest
+    request: Pick<MusicItem, 'status' | 'catalogTrackId' | 'catalogAlbumId'>
   ): Observable<MusicItem> {
     return this.http.put<MusicItem>(
       this.itemUrl(wallId, sectionId) + '/' + itemId,

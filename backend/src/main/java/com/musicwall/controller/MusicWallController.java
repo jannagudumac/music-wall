@@ -1,12 +1,8 @@
 package com.musicwall.controller;
 
-import com.musicwall.dto.AddWallMemberRequest;
-import com.musicwall.dto.CreateMusicWallRequest;
 import com.musicwall.dto.MusicWallDTO;
-import com.musicwall.dto.MusicWallDetailDTO;
 import com.musicwall.dto.UpdateWallAppearanceRequest;
-import com.musicwall.dto.UserSearchDTO;
-import com.musicwall.dto.WallMemberDTO;
+import com.musicwall.dto.UserDTO;
 import com.musicwall.service.MusicWallService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -38,7 +34,7 @@ public class MusicWallController {
     @ResponseStatus(HttpStatus.CREATED)
     public MusicWallDTO createWall(
             Authentication authentication,
-            @Valid @RequestBody CreateMusicWallRequest request
+            @Valid @RequestBody MusicWallDTO request
     ) {
         return musicWallService.createWall(authentication.getName(), request);
     }
@@ -49,7 +45,7 @@ public class MusicWallController {
     }
 
     @GetMapping("/{id}")
-    public MusicWallDetailDTO getWall(
+    public MusicWallDTO getWall(
             @PathVariable Long id,
             Authentication authentication
     ) {
@@ -60,7 +56,7 @@ public class MusicWallController {
     public MusicWallDTO updateWall(
             @PathVariable Long id,
             Authentication authentication,
-            @Valid @RequestBody CreateMusicWallRequest request
+            @Valid @RequestBody MusicWallDTO request
     ) {
         return musicWallService.updateWall(id, authentication.getName(), request);
     }
@@ -77,7 +73,7 @@ public class MusicWallController {
     }
 
     @GetMapping("/{wallId}/members")
-    public List<WallMemberDTO> getMembers(
+    public List<UserDTO> getMembers(
             @PathVariable Long wallId,
             Authentication authentication
     ) {
@@ -85,7 +81,7 @@ public class MusicWallController {
     }
 
     @GetMapping("/{wallId}/members/search")
-    public List<UserSearchDTO> searchMemberCandidates(
+    public List<UserDTO> searchMemberCandidates(
             @PathVariable Long wallId,
             @RequestParam String query,
             Authentication authentication
@@ -97,10 +93,10 @@ public class MusicWallController {
 
     @PostMapping("/{wallId}/members")
     @ResponseStatus(HttpStatus.CREATED)
-    public WallMemberDTO addMember(
+    public UserDTO addMember(
             @PathVariable Long wallId,
             Authentication authentication,
-            @Valid @RequestBody AddWallMemberRequest request
+            @Valid @RequestBody UserDTO request
     ) {
         return musicWallService.addMember(
                 wallId, authentication.getName(), request

@@ -1,13 +1,26 @@
 package com.musicwall.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MusicSectionDTO {
 
     private Long id;
+
+    @NotBlank(message = "Section name is required")
+    @Size(max = 80, message = "Section name is too long")
     private String name;
-    private String noteColor;
+
+    @Pattern(
+            regexp = "CREAM|ROSE|PEACH|MINT|SKY|LAVENDER",
+            message = "Unknown note color"
+    )
+    private String noteColor = "CREAM";
+
     private List<MusicItemDTO> items = new ArrayList<>();
 
     public Long getId() {

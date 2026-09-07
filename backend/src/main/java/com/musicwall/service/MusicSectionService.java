@@ -1,6 +1,5 @@
 package com.musicwall.service;
 
-import com.musicwall.dto.CreateMusicSectionRequest;
 import com.musicwall.dto.MusicItemDTO;
 import com.musicwall.dto.MusicSectionDTO;
 import com.musicwall.entity.MusicItemEntity;
@@ -36,7 +35,7 @@ public class MusicSectionService {
     public MusicSectionDTO createSection(
             String username,
             Long wallId,
-            CreateMusicSectionRequest request
+            MusicSectionDTO request
     ) {
         MusicWallEntity wall = findAccessibleWall(username, wallId);
 
@@ -68,7 +67,7 @@ public class MusicSectionService {
             String username,
             Long wallId,
             Long sectionId,
-            CreateMusicSectionRequest request
+            MusicSectionDTO request
     ) {
         findAccessibleWall(username, wallId);
         MusicSectionEntity section = findSectionInWall(sectionId, wallId);

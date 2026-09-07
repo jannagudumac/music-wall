@@ -1,9 +1,8 @@
 package com.musicwall.controller;
 
 import com.musicwall.dto.ChangePasswordRequest;
-import com.musicwall.dto.ProfileAvatarDTO;
 import com.musicwall.dto.ProfileDTO;
-import com.musicwall.dto.UpdateProfileDTO;
+import com.musicwall.service.AvatarData;
 import com.musicwall.service.ProfileService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
@@ -38,7 +37,7 @@ public class ProfileController {
 
     @PutMapping("/me")
     public ProfileDTO updateProfile(
-            @Valid @RequestBody UpdateProfileDTO request,
+            @Valid @RequestBody ProfileDTO request,
             Authentication authentication
     ) {
         return profileService.updateProfile(authentication.getName(), request);
@@ -63,7 +62,7 @@ public class ProfileController {
 
     @GetMapping("/{username}/avatar")
     public ResponseEntity<byte[]> getAvatar(@PathVariable String username) {
-        ProfileAvatarDTO avatar = profileService.getAvatar(username);
+        AvatarData avatar = profileService.getAvatar(username);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(avatar.getContentType()))
                 .body(avatar.getImage());

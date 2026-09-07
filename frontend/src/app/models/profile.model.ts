@@ -4,10 +4,6 @@ export interface UserProfile {
   avatarUrl: string | null;
 }
 
-export interface UpdateProfile {
-  bio: string;
-}
-
 export interface ChangePasswordRequest {
   currentPassword: string;
   newPassword: string;

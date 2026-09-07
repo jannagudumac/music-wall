@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { CreateMusicItemRequest, ListeningStatus, MusicItem } from '../../models/music-wall.model';
+import { ListeningStatus, MusicItem } from '../../models/music-wall.model';
 import { MusicWallService } from '../../services/music-wall.service';
 
 @Component({
@@ -26,7 +26,7 @@ export class MusicItemComponent {
     const status: ListeningStatus = this.item.status === 'LISTENED'
       ? 'TO_LISTEN'
       : 'LISTENED';
-    const request: CreateMusicItemRequest = {
+    const request: Pick<MusicItem, 'status' | 'catalogTrackId' | 'catalogAlbumId'> = {
       status,
       catalogTrackId: this.item.catalogTrackId,
       catalogAlbumId: this.item.catalogAlbumId

@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { UserSearchResult, WallMember } from '../../models/music-wall.model';
+import { User } from '../../models/music-wall.model';
 import { MusicWallService } from '../../services/music-wall.service';
 
 @Component({
@@ -18,8 +18,8 @@ export class WallMembersComponent implements OnInit {
   @Input({ required: true }) ownerUsername!: string;
   @Input() isOwner = false;
 
-  members: WallMember[] = [];
-  candidates: UserSearchResult[] = [];
+  members: User[] = [];
+  candidates: User[] = [];
   query = '';
   message = '';
   errorMessage = '';
@@ -62,7 +62,7 @@ export class WallMembersComponent implements OnInit {
     });
   }
 
-  remove(member: WallMember): void {
+  remove(member: User): void {
     if (!window.confirm('Remove ' + member.username + ' from this wall?')) return;
     this.musicWallService.removeMember(this.wallId, member.username).subscribe({
       next: () => this.members = this.members.filter(item => item !== member),

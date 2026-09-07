@@ -1,9 +1,7 @@
 package com.musicwall.service;
 
 import com.musicwall.dto.ChangePasswordRequest;
-import com.musicwall.dto.ProfileAvatarDTO;
 import com.musicwall.dto.ProfileDTO;
-import com.musicwall.dto.UpdateProfileDTO;
 import com.musicwall.entity.UserEntity;
 import com.musicwall.exception.BusinessException;
 import com.musicwall.exception.ResourceNotFoundException;
@@ -35,7 +33,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public ProfileDTO updateProfile(String username, UpdateProfileDTO request) {
+    public ProfileDTO updateProfile(String username, ProfileDTO request) {
         UserEntity user = findUser(username);
         user.setBio(cleanOptional(request.getBio()));
         return convertToDTO(userRepository.save(user));
@@ -74,12 +72,12 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = true)
-    public ProfileAvatarDTO getAvatar(String username) {
+    public AvatarData getAvatar(String username) {
         UserEntity user = findUser(username);
         if (user.getAvatarImage() == null) {
             throw new ResourceNotFoundException("Avatar not found");
         }
-        return new ProfileAvatarDTO(user.getAvatarImage(), user.getAvatarContentType());
+        return new AvatarData(user.getAvatarImage(), user.getAvatarContentType());
     }
 
     private ProfileDTO convertToDTO(UserEntity user) {

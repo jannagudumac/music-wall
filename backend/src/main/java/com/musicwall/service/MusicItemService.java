@@ -1,6 +1,5 @@
 package com.musicwall.service;
 
-import com.musicwall.dto.CreateMusicItemRequest;
 import com.musicwall.dto.MusicItemDTO;
 import com.musicwall.entity.ListeningStatus;
 import com.musicwall.entity.MusicItemEntity;
@@ -43,7 +42,7 @@ public class MusicItemService {
             String username,
             Long wallId,
             Long sectionId,
-            CreateMusicItemRequest request
+            MusicItemDTO request
     ) {
         verifyWallAccess(username, wallId);
         MusicSectionEntity section = findSectionInWall(sectionId, wallId);
@@ -61,7 +60,7 @@ public class MusicItemService {
             Long wallId,
             Long sectionId,
             Long itemId,
-            CreateMusicItemRequest request
+            MusicItemDTO request
     ) {
         verifyWallAccess(username, wallId);
         findSectionInWall(sectionId, wallId);
@@ -109,7 +108,7 @@ public class MusicItemService {
         return item;
     }
 
-    private void applyRequest(MusicItemEntity item, CreateMusicItemRequest request) {
+    private void applyRequest(MusicItemEntity item, MusicItemDTO request) {
         boolean hasTrack = request.getCatalogTrackId() != null;
         boolean hasAlbum = request.getCatalogAlbumId() != null;
         if (hasTrack == hasAlbum) {

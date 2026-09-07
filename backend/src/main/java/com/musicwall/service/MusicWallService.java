@@ -1,12 +1,8 @@
 package com.musicwall.service;
 
-import com.musicwall.dto.AddWallMemberRequest;
-import com.musicwall.dto.CreateMusicWallRequest;
 import com.musicwall.dto.MusicWallDTO;
-import com.musicwall.dto.MusicWallDetailDTO;
 import com.musicwall.dto.UpdateWallAppearanceRequest;
-import com.musicwall.dto.UserSearchDTO;
-import com.musicwall.dto.WallMemberDTO;
+import com.musicwall.dto.UserDTO;
 import com.musicwall.entity.MusicWallEntity;
 import com.musicwall.entity.UserEntity;
 import com.musicwall.exception.BusinessException;
@@ -35,7 +31,7 @@ public class MusicWallService {
     private final WallAccessService wallAccessService;
 
     @Transactional
-    public MusicWallDTO createWall(String username, CreateMusicWallRequest request) {
+    public MusicWallDTO createWall(String username, MusicWallDTO request) {
         UserEntity owner = findUser(username);
         MusicWallEntity wall = new MusicWallEntity();
         wall.setName(request.getName());
@@ -55,20 +51,15 @@ public class MusicWallService {
     }
 
     @Transactional(readOnly = true)
-    public MusicWallDetailDTO getWall(Long id, String username) {
+    public MusicWallDTO getWall(Long id, String username) {
         MusicWallEntity wall = wallAccessService.findAccessibleWall(username, id);
-        MusicWallDetailDTO dto = new MusicWallDetailDTO();
-        dto.setId(wall.getId());
-        dto.setName(wall.getName());
-        dto.setOwnerUsername(wall.getOwner().getUsername());
-        dto.setWallpaper(wall.getWallpaper());
-        dto.setWallColor(normalizeWallColor(wall.getWallColor()));
+        MusicWallDTO dto = convertToDTO(wall);
         dto.setSections(musicSectionService.getSectionsForWall(username, id));
         return dto;
     }
 
     @Transactional
-    public MusicWallDTO updateWall(Long id, String username, CreateMusicWallRequest request) {
+    public MusicWallDTO updateWall(Long id, String username, MusicWallDTO request) {
         MusicWallEntity wall = wallAccessService.findOwnedWall(username, id);
         wall.setName(request.getName());
         wall.setWallpaper(request.getWallpaper());
@@ -89,17 +80,17 @@ public class MusicWallService {
     }
 
     @Transactional(readOnly = true)
-    public List<WallMemberDTO> getMembers(Long wallId, String username) {
+    public List<UserDTO> getMembers(Long wallId, String username) {
         MusicWallEntity wall = wallAccessService.findAccessibleWall(username, wallId);
         return wall.getMembers().stream()
-                .map(member -> new WallMemberDTO(member.getUsername()))
+                .map(member -> new UserDTO(member.getUsername()))
                 .sorted((first, second) -> first.getUsername()
                         .compareToIgnoreCase(second.getUsername()))
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<UserSearchDTO> searchMemberCandidates(
+    public List<UserDTO> searchMemberCandidates(
             Long wallId,
             String ownerUsername,
             String query
@@ -116,15 +107,15 @@ public class MusicWallService {
         return userRepository.searchByUsername(cleanedQuery, ownerUsername).stream()
                 .filter(user -> !memberNames.contains(user.getUsername()))
                 .limit(20)
-                .map(user -> new UserSearchDTO(user.getUsername()))
+                .map(user -> new UserDTO(user.getUsername()))
                 .toList();
     }
 
     @Transactional
-    public WallMemberDTO addMember(
+    public UserDTO addMember(
             Long wallId,
             String ownerUsername,
-            AddWallMemberRequest request
+            UserDTO request
     ) {
         MusicWallEntity wall = wallAccessService.findOwnedWall(ownerUsername, wallId);
         String memberUsername = request.getUsername().trim();
@@ -141,7 +132,7 @@ public class MusicWallService {
 
         wall.getMembers().add(member);
         musicWallRepository.save(wall);
-        return new WallMemberDTO(member.getUsername());
+        return new UserDTO(member.getUsername());
     }
 
     @Transactional

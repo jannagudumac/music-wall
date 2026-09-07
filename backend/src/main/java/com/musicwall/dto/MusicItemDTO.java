@@ -1,12 +1,19 @@
 package com.musicwall.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 public class MusicItemDTO {
 
     private Long id;
     private String title;
     private String artist;
     private String itemType;
+
+    @NotBlank(message = "Listening status is required")
+    @Pattern(regexp = "TO_LISTEN|LISTENED", message = "Invalid listening status")
     private String status;
+
     private Long catalogTrackId;
     private Long catalogAlbumId;
 

@@ -18,12 +18,6 @@ export interface MusicWall {
   wallColor: string;
 }
 
-export interface CreateMusicWallRequest {
-  name: string;
-  wallpaper: WallWallpaper;
-  wallColor: string;
-}
-
 export type MusicItemType = 'TRACK' | 'ALBUM';
 export type ListeningStatus = 'TO_LISTEN' | 'LISTENED';
 export type SectionNoteColor = 'CREAM' | 'ROSE' | 'PEACH' | 'MINT' | 'SKY' | 'LAVENDER';
@@ -49,21 +43,6 @@ export interface MusicWallDetail extends MusicWall {
   sections: MusicSection[];
 }
 
-export interface CreateMusicSectionRequest {
-  name: string;
-  noteColor: SectionNoteColor;
-}
-
-export interface CreateMusicItemRequest {
-  status: ListeningStatus;
-  catalogTrackId?: number | null;
-  catalogAlbumId?: number | null;
-}
-
-export interface WallMember {
-  username: string;
-}
-
-export interface UserSearchResult {
+export interface User {
   username: string;
 }

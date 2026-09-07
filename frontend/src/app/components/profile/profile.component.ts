@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { UpdateProfile, UserProfile } from '../../models/profile.model';
+import { UserProfile } from '../../models/profile.model';
 import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
 import { environment } from '../../../environments/environment';
@@ -17,7 +17,7 @@ import { environment } from '../../../environments/environment';
 export class ProfileComponent implements OnInit {
 
   profile: UserProfile | null = null;
-  editModel: UpdateProfile | null = null;
+  editModel: Pick<UserProfile, 'bio'> | null = null;
   errorMessage = '';
   editError = '';
   loading = true;

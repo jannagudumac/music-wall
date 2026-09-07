@@ -1,7 +1,7 @@
 package com.musicwall.service;
 
-import com.musicwall.dto.AddWallMemberRequest;
-import com.musicwall.dto.CreateMusicWallRequest;
+import com.musicwall.dto.MusicWallDTO;
+import com.musicwall.dto.UserDTO;
 import com.musicwall.entity.MusicWallEntity;
 import com.musicwall.entity.UserEntity;
 import com.musicwall.repository.MusicItemRepository;
@@ -50,7 +50,7 @@ class MusicWallServiceTest {
     @Test
     void creatorBecomesOwnerWithoutBeingDuplicatedAsMember() {
         UserEntity owner = user(1L, "janna");
-        CreateMusicWallRequest request = new CreateMusicWallRequest();
+        MusicWallDTO request = new MusicWallDTO();
         request.setName("Shared discoveries");
         when(userRepository.findByUsername("janna")).thenReturn(Optional.of(owner));
         when(wallRepository.save(any(MusicWallEntity.class))).thenAnswer(invocation -> {
@@ -74,7 +74,7 @@ class MusicWallServiceTest {
         MusicWallEntity wall = new MusicWallEntity();
         wall.setId(10L);
         wall.setOwner(owner);
-        AddWallMemberRequest request = new AddWallMemberRequest();
+        UserDTO request = new UserDTO();
         request.setUsername("alice");
         when(accessService.findOwnedWall("janna", 10L)).thenReturn(wall);
         when(userRepository.findByUsername("alice")).thenReturn(Optional.of(member));

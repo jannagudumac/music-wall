@@ -1,6 +1,6 @@
 package com.musicwall.service;
 
-import com.musicwall.dto.CreateMusicItemRequest;
+import com.musicwall.dto.MusicItemDTO;
 import com.musicwall.entity.MusicSectionEntity;
 import com.musicwall.entity.MusicWallEntity;
 import com.musicwall.exception.BusinessException;
@@ -39,7 +39,7 @@ class MusicItemServiceTest {
         MusicItemService service = new MusicItemService(
                 itemRepository, sectionRepository, accessService, trackRepository, albumRepository
         );
-        CreateMusicItemRequest request = new CreateMusicItemRequest();
+        MusicItemDTO request = new MusicItemDTO();
         request.setStatus("TO_LISTEN");
         request.setCatalogTrackId(2L);
         request.setCatalogAlbumId(3L);

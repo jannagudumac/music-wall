@@ -1,14 +1,33 @@
 package com.musicwall.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.musicwall.entity.Wallpaper;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 public class MusicWallDTO {
 
     private Long id;
+
+    @NotBlank(message = "Wall name is required")
+    @Size(max = 100, message = "Wall name is too long")
     private String name;
+
     private String ownerUsername;
-    private Wallpaper wallpaper;
-    private String wallColor;
+
+    private Wallpaper wallpaper = Wallpaper.NONE;
+
+    @Pattern(
+            regexp = "#[0-9a-fA-F]{6}",
+            message = "Wall color must be a hexadecimal color"
+    )
+    private String wallColor = "#FFFFFF";
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<MusicSectionDTO> sections;
 
     public Long getId() {
         return id;
@@ -48,5 +67,13 @@ public class MusicWallDTO {
 
     public void setWallColor(String wallColor) {
         this.wallColor = wallColor;
+    }
+
+    public List<MusicSectionDTO> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<MusicSectionDTO> sections) {
+        this.sections = sections;
     }
 }

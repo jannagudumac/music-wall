@@ -1,6 +1,5 @@
 package com.musicwall.service;
 
-import com.musicwall.dto.CreateMusicSectionRequest;
 import com.musicwall.dto.MusicSectionDTO;
 import com.musicwall.entity.MusicSectionEntity;
 import com.musicwall.entity.MusicWallEntity;
@@ -46,7 +45,7 @@ class MusicSectionServiceTest {
         MusicWallEntity wall = new MusicWallEntity();
         wall.setId(5L);
 
-        CreateMusicSectionRequest request = new CreateMusicSectionRequest();
+        MusicSectionDTO request = new MusicSectionDTO();
         request.setName("Jazz");
         request.setNoteColor("MINT");
 

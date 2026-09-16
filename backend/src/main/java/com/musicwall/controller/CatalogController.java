@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// The controller receives catalogue requests and delegates searches and details to the service.
 @RestController
 @RequestMapping("/api/catalog")
 public class CatalogController {
@@ -25,6 +26,7 @@ public class CatalogController {
         this.catalogService = catalogService;
     }
 
+    // Read the search text from the URL; an empty query displays the full catalogue.
     @GetMapping("/search")
     public CatalogSearchDTO search(
             @RequestParam(defaultValue = "") String query
@@ -32,6 +34,7 @@ public class CatalogController {
         return catalogService.search(query);
     }
 
+    // Return a short suggestion list for autocomplete, not the full search results.
     @GetMapping("/suggestions")
     public List<CatalogSuggestionDTO> suggestions(
             @RequestParam String query

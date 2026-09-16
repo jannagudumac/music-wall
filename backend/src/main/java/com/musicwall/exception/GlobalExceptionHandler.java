@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+// Turns known application errors into HTTP responses with a message the frontend can display.
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Return HTTP 400 when an application rule rejects the request.
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Map<String, String>> handleBusinessException(
             BusinessException exception
@@ -20,6 +22,7 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
+    // Return HTTP 404 when the requested resource cannot be found.
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleNotFoundException(
             ResourceNotFoundException exception
@@ -27,20 +30,24 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
+    // Return HTTP 401 for incorrect credentials without revealing which field was wrong.
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, String>> handleBadCredentials() {
         return buildResponse(HttpStatus.UNAUTHORIZED, "Invalid username or password");
     }
 
+    // Return HTTP 403 when the logged-in user lacks permission.
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<Map<String, String>> handleForbidden(ForbiddenException exception) {
         return buildResponse(HttpStatus.FORBIDDEN, exception.getMessage());
     }
 
+    // Return HTTP 400 when @Valid rejects request fields.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(
             MethodArgumentNotValidException exception
     ) {
+        // Use the first validation message to give the user clear feedback.
         String message = exception.getBindingResult()
                 .getFieldErrors()
                 .get(0)

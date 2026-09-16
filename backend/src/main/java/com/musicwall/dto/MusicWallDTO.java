@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
+// DTO receives editable wall fields; the service supplies the id, owner and detail sections.
 public class MusicWallDTO {
 
     private Long id;
@@ -26,6 +27,7 @@ public class MusicWallDTO {
     )
     private String wallColor = "#FFFFFF";
 
+    // Jackson leaves sections out of list JSON when null, and includes them for wall details.
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<MusicSectionDTO> sections;
 

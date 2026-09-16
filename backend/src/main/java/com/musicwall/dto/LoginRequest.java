@@ -2,6 +2,7 @@ package com.musicwall.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
+// DTO receives login credentials; @NotBlank rejects missing or blank values.
 public class LoginRequest {
 
     @NotBlank(message = "Username is required")

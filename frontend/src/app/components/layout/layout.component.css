@@ -51,7 +51,7 @@
   padding: 30px 32px;
 }
 
-/* Pages with image heroes own their spacing and extend to the content-shell edges. */
+/* Pages with image headers set their own spacing so the image reaches the content edges. */
 .page-content:has(app-catalog),
 .page-content:has(app-profile),
 .page-content:has(app-wall-detail) {

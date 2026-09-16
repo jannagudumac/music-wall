@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
 import { environment } from '../../../environments/environment';
 
+// Displays a profile and lets its owner edit biography, avatar and password.
 @Component({
   selector: 'app-profile',
   imports: [CommonModule, FormsModule],
@@ -44,6 +45,7 @@ export class ProfileComponent implements OnInit {
   ) {
   }
 
+  // Use the route's username for another profile; otherwise load the logged-in account.
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.profile = null;
@@ -63,9 +65,11 @@ export class ProfileComponent implements OnInit {
   get avatarSrc(): string | null {
     if (!this.profile?.avatarUrl) return null;
     const server = environment.apiUrl.replace(/\/api$/, '');
+    // Change the image URL after upload so the browser does not show the cached avatar.
     return `${server}${this.profile.avatarUrl}?v=${this.avatarVersion}`;
   }
 
+  // Edit a copy of the biography so Cancel leaves the displayed profile unchanged.
   openEditor(): void {
     if (!this.profile || !this.isOwnProfile) return;
     this.editModel = { bio: this.profile.bio || '' };
@@ -79,6 +83,7 @@ export class ProfileComponent implements OnInit {
     this.editModel = null;
   }
 
+  // Send only the biography and display the saved profile after success.
   saveProfile(): void {
     if (!this.editModel) return;
     this.saving = true;
@@ -96,9 +101,11 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  // Upload the chosen image, then refresh the displayed avatar.
   chooseAvatar(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
+    // Reset the file input so the same file can be selected again after a failed upload.
     input.value = '';
     if (!file || !this.isOwnProfile) return;
 
@@ -129,6 +136,8 @@ export class ProfileComponent implements OnInit {
     this.resetPasswordModel();
   }
 
+  // Check password length and confirmation before sending the current and new passwords to the
+  // backend.
   changePassword(): void {
     const currentPassword = this.passwordModel.currentPassword;
     const newPassword = this.passwordModel.newPassword;

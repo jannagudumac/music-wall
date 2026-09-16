@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+// The service manages sections inside walls the user can access.
 @Service
 public class MusicSectionService {
 
@@ -31,6 +32,7 @@ public class MusicSectionService {
         this.wallAccessService = wallAccessService;
     }
 
+    // Check wall access before creating a section.
     @Transactional
     public MusicSectionDTO createSection(
             String username,
@@ -40,6 +42,7 @@ public class MusicSectionService {
         MusicWallEntity wall = findAccessibleWall(username, wallId);
 
         MusicSectionEntity section = new MusicSectionEntity();
+        // Use the request's name and color; the server chooses the parent wall and id.
         section.setName(request.getName());
         section.setNoteColor(normalizeNoteColor(request.getNoteColor()));
         section.setWall(wall);
@@ -47,6 +50,7 @@ public class MusicSectionService {
         return convertToDTO(musicSectionRepository.save(section));
     }
 
+    // Read the wall's sections and their items in a stable order.
     @Transactional(readOnly = true)
     public List<MusicSectionDTO> getSectionsForWall(String username, Long wallId) {
         findAccessibleWall(username, wallId);
@@ -62,6 +66,7 @@ public class MusicSectionService {
         return sectionDTOs;
     }
 
+    // Check the parent wall before changing the section's name or color.
     @Transactional
     public MusicSectionDTO updateSection(
             String username,
@@ -76,6 +81,7 @@ public class MusicSectionService {
         return convertToDTO(musicSectionRepository.save(section));
     }
 
+    // Delete the items first because they reference the section in the database.
     @Transactional
     public void deleteSection(String username, Long wallId, Long sectionId) {
         findAccessibleWall(username, wallId);
@@ -92,6 +98,7 @@ public class MusicSectionService {
         MusicSectionEntity section = musicSectionRepository.findById(sectionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found"));
 
+        // Reject a section that does not belong to the wall in the URL.
         if (!section.getWall().getId().equals(wallId)) {
             throw new ResourceNotFoundException("Section not found");
         }
@@ -99,6 +106,7 @@ public class MusicSectionService {
         return section;
     }
 
+    // Build section and item DTOs for the frontend.
     private MusicSectionDTO convertToDTO(MusicSectionEntity section) {
         MusicSectionDTO dto = new MusicSectionDTO();
         dto.setId(section.getId());
@@ -126,6 +134,7 @@ public class MusicSectionService {
     }
 
     private String normalizeNoteColor(String noteColor) {
+        // Use cream as the default when an older section has no valid color.
         if (noteColor != null && List.of("CREAM", "ROSE", "PEACH", "MINT", "SKY", "LAVENDER")
                 .contains(noteColor)) {
             return noteColor;

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Album, ArtistDetail, Track } from '../../models/catalog.model';
 import { CatalogService } from '../../services/catalog.service';
 
+// Uses the route's type and id to show an artist, album or track.
 @Component({
   selector: 'app-catalog-detail',
   imports: [CommonModule, RouterLink],
@@ -44,6 +45,7 @@ export class CatalogDetailComponent implements OnInit {
     return this.returnWallId ? 'Back to wall' : 'Back to catalogue';
   }
 
+  // Return to the original wall and section when available, otherwise to the catalogue.
   goBack(): void {
     if (this.returnWallId) {
       this.router.navigate(['/walls', this.returnWallId], {
@@ -72,6 +74,7 @@ export class CatalogDetailComponent implements OnInit {
     return Number.isInteger(value) && value > 0 ? value : null;
   }
 
+  // Clear the old details before loading another artist, album or track.
   private loadDetail(id: number): void {
     this.loading = true;
     this.errorMessage = '';

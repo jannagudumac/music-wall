@@ -15,6 +15,7 @@ import jakarta.persistence.UniqueConstraint;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+// JPA maps this catalogue album to the album table.
 @Entity
 @Table(
         name = "album",
@@ -25,6 +26,7 @@ import java.util.Set;
 )
 public class AlbumEntity {
 
+    // The database generates the id when a new album is saved.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,10 +40,12 @@ public class AlbumEntity {
     @Column(name = "cover_url", length = 500)
     private String coverUrl;
 
+    // Each album needs an artist; several albums can reference the same artist.
     @ManyToOne
     @JoinColumn(name = "artist_id", nullable = false)
     private ArtistEntity artist;
 
+    // The album_genre join table links albums to genres without duplicating genre records.
     @ManyToMany
     @JoinTable(
             name = "album_genre",

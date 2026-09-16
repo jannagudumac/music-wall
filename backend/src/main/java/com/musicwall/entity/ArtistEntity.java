@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+// JPA maps this catalogue artist to the artist table.
 @Entity
 @Table(
         name = "artist",
@@ -15,6 +16,7 @@ import jakarta.persistence.UniqueConstraint;
 )
 public class ArtistEntity {
 
+    // The database generates the id when a new artist is saved.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

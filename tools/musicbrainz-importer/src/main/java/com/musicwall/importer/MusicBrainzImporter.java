@@ -21,8 +21,8 @@ import java.util.Locale;
 import java.util.Set;
 
 /**
- * Development-only utility that transforms selected MusicBrainz data into a
- * provider-independent PostgreSQL seed. It is not part of the Spring backend.
+ * Development tool: turns selected MusicBrainz data into a PostgreSQL seed file. It is not part of
+ * the backend.
  */
 public final class MusicBrainzImporter {
 

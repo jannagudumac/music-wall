@@ -11,9 +11,12 @@ import { CatalogDetailComponent } from './components/catalog-detail/catalog-deta
 import { ProfileComponent } from './components/profile/profile.component';
 import { authGuard } from './guards/auth.guard';
 
+// Defines public login/register routes and pages protected by the login guard.
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  // These pages share the layout; the guard requires a saved token, and the backend checks its
+  // validity.
   {
     path: '',
     component: LayoutComponent,

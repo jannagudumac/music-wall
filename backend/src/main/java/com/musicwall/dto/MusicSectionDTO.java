@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
+// DTO receives name/color and returns section details; user input cannot replace the id or items.
 public class MusicSectionDTO {
 
     private Long id;

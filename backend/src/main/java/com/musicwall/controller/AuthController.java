@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+// The controller receives registration and login requests, then delegates to AuthService.
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -22,6 +23,7 @@ public class AuthController {
         this.authService = authService;
     }
 
+    // @Valid checks the input before registration; a created account returns HTTP 201.
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthResponse register(
@@ -30,6 +32,7 @@ public class AuthController {
         return authService.register(request);
     }
 
+    // Return a JWT after successful login; incorrect credentials return HTTP 401.
     @PostMapping("/login")
     public AuthResponse login(
             @Valid @RequestBody LoginRequest request

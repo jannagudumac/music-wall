@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { User } from '../../models/music-wall.model';
 import { MusicWallService } from '../../services/music-wall.service';
 
+// Displays shared users and lets the owner manage membership.
 @Component({
   selector: 'app-wall-members',
   imports: [CommonModule, FormsModule, RouterLink],
@@ -14,6 +15,7 @@ import { MusicWallService } from '../../services/music-wall.service';
 })
 export class WallMembersComponent implements OnInit {
 
+  // Receive the wall and owner information from the parent page.
   @Input({ required: true }) wallId!: number;
   @Input({ required: true }) ownerUsername!: string;
   @Input() isOwner = false;
@@ -33,6 +35,7 @@ export class WallMembersComponent implements OnInit {
     this.loadMembers();
   }
 
+  // Require at least two characters before searching for new members.
   search(): void {
     const query = this.query.trim();
     if (query.length < 2) {
@@ -46,10 +49,12 @@ export class WallMembersComponent implements OnInit {
     });
   }
 
+  // Send the chosen username to the backend to share the wall.
   add(username: string): void {
     this.saving = true;
     this.musicWallService.addMember(this.wallId, username).subscribe({
       next: member => {
+        // Update the displayed lists only after the backend accepts the new member.
         this.members.push(member);
         this.candidates = this.candidates.filter(item => item.username !== username);
         this.message = username + ' was added to the wall.';
@@ -62,6 +67,7 @@ export class WallMembersComponent implements OnInit {
     });
   }
 
+  // Confirm removal from the wall without deleting the user account.
   remove(member: User): void {
     if (!window.confirm('Remove ' + member.username + ' from this wall?')) return;
     this.musicWallService.removeMember(this.wallId, member.username).subscribe({

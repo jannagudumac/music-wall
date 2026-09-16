@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+// The controller delegates item requests to the service, which checks the wall and section.
 @RestController
 @RequestMapping("/api/walls/{wallId}/sections/{sectionId}/items")
 public class MusicItemController {
@@ -24,6 +25,8 @@ public class MusicItemController {
         this.musicItemService = musicItemService;
     }
 
+    // Add a catalogue track or album with a listening status; the service supplies its title and
+    // artist.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MusicItemDTO createItem(
@@ -40,6 +43,7 @@ public class MusicItemController {
         );
     }
 
+    // Use the item id from the URL, not an id sent in the request body.
     @PutMapping("/{itemId}")
     public MusicItemDTO updateItem(
             @PathVariable Long wallId,
@@ -57,6 +61,7 @@ public class MusicItemController {
         );
     }
 
+    // Return HTTP 204 with no body after the service confirms deletion.
     @DeleteMapping("/{itemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteItem(

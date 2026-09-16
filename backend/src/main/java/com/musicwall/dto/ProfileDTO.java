@@ -2,9 +2,12 @@ package com.musicwall.dto;
 
 import jakarta.validation.constraints.Size;
 
+// DTO receives biography edits and returns profile details; username and avatar URL are not
+// editable here.
 public class ProfileDTO {
     private String username;
 
+    // The biography is optional; @Size limits its length when text is supplied.
     @Size(max = 300, message = "Bio must be at most 300 characters")
     private String bio;
 

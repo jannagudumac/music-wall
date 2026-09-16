@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { ListeningStatus, MusicItem } from '../../models/music-wall.model';
 import { MusicWallService } from '../../services/music-wall.service';
 
+// Displays one saved item and handles its status or deletion.
 @Component({
   selector: 'app-music-item',
   imports: [CommonModule, RouterLink],
@@ -13,6 +14,7 @@ import { MusicWallService } from '../../services/music-wall.service';
 })
 export class MusicItemComponent {
 
+  // Receive the item from the parent and report deletion or errors through @Output.
   @Input({ required: true }) wallId!: number;
   @Input({ required: true }) sectionId!: number;
   @Input({ required: true }) item!: MusicItem;
@@ -22,6 +24,7 @@ export class MusicItemComponent {
   constructor(private musicWallService: MusicWallService) {
   }
 
+  // Change only the listening status while keeping the same catalogue entry.
   toggleStatus(): void {
     const status: ListeningStatus = this.item.status === 'LISTENED'
       ? 'TO_LISTEN'
@@ -39,6 +42,7 @@ export class MusicItemComponent {
     });
   }
 
+  // Ask for confirmation, then tell the parent to remove the item after backend success.
   deleteItem(): void {
     if (!window.confirm('Delete "' + this.item.title + '"?')) return;
     this.musicWallService.deleteItem(this.wallId, this.sectionId, this.item.id).subscribe({

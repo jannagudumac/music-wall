@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+// The service reads the catalogue from PostgreSQL; it does not call an external music API.
 @Service
 public class CatalogService {
 
@@ -47,6 +48,7 @@ public class CatalogService {
         String cleanQuery = query == null ? "" : query.trim();
         CatalogSearchDTO result = new CatalogSearchDTO();
 
+        // An empty search displays the full catalogue.
         if (cleanQuery.isEmpty()) {
             result.setArtists(artistRepository.findAllByOrderByNameAsc().stream()
                     .map(this::convertArtist).toList());
@@ -59,6 +61,7 @@ public class CatalogService {
             return result;
         }
 
+        // Also find similar spellings, not just exact text matches.
         result.setArtists(artistRepository.searchSimilar(cleanQuery).stream()
                 .map(this::convertArtist).toList());
         result.setAlbums(albumRepository.searchSimilar(cleanQuery).stream()
@@ -70,6 +73,7 @@ public class CatalogService {
         return result;
     }
 
+    // Prepare autocomplete suggestions from artists, albums and tracks.
     @Transactional(readOnly = true)
     public List<CatalogSuggestionDTO> getSuggestions(String query) {
         String cleanQuery = query == null ? "" : query.trim();
@@ -81,6 +85,7 @@ public class CatalogService {
         rows.addAll(artistRepository.findSuggestions(cleanQuery, 5));
         rows.addAll(albumRepository.findSuggestions(cleanQuery, 5));
         rows.addAll(trackRepository.findSuggestions(cleanQuery, 5));
+        // Sort all candidates by relevance and keep the best ten.
         return rows.stream()
                 .sorted((first, second) -> Float.compare(second.getScore(), first.getScore()))
                 .limit(10)
@@ -90,6 +95,7 @@ public class CatalogService {
                 .toList();
     }
 
+    // Return the artist with their albums and tracks in the format expected by Angular.
     @Transactional(readOnly = true)
     public ArtistDetailDTO getArtist(Long id) {
         ArtistEntity artist = artistRepository.findById(id)
@@ -104,6 +110,7 @@ public class CatalogService {
         return detail;
     }
 
+    // Add the album's tracks only for the detail response.
     @Transactional(readOnly = true)
     public AlbumDTO getAlbum(Long id) {
         AlbumDTO album = convertAlbum(albumRepository.findById(id)
@@ -121,6 +128,7 @@ public class CatalogService {
                 .orElseThrow(() -> new ResourceNotFoundException("Track not found")));
     }
 
+    // Build DTOs so the API returns selected fields instead of database entities.
     private ArtistDTO convertArtist(ArtistEntity artist) {
         ArtistDTO dto = new ArtistDTO();
         dto.setId(artist.getId());
@@ -136,6 +144,7 @@ public class CatalogService {
     }
 
     private AlbumDTO convertAlbum(AlbumEntity album) {
+        // Return artist details as simple fields instead of the related entity.
         AlbumDTO dto = new AlbumDTO();
         dto.setId(album.getId());
         dto.setTitle(album.getTitle());
@@ -157,6 +166,7 @@ public class CatalogService {
         dto.setDurationSeconds(track.getDurationSeconds());
         dto.setArtistId(track.getArtist().getId());
         dto.setArtistName(track.getArtist().getName());
+        // A track can exist without an album, so check before reading album details.
         if (track.getAlbum() != null) {
             dto.setAlbumId(track.getAlbum().getId());
             dto.setAlbumTitle(track.getAlbum().getTitle());

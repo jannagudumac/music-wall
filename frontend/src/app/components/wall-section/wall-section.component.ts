@@ -15,6 +15,7 @@ import {
 } from '../catalog-search/catalog-search.component';
 import { MusicItemComponent } from '../music-item/music-item.component';
 
+// Manages one section and adds music selected from the catalogue.
 @Component({
   selector: 'app-wall-section',
   imports: [CommonModule, FormsModule, CatalogSearchComponent, MusicItemComponent],
@@ -23,7 +24,9 @@ import { MusicItemComponent } from '../music-item/music-item.component';
 })
 export class WallSectionComponent {
 
+  // @ViewChild gives access to the palette's HTML element for detecting outside clicks.
   @ViewChild('colorPickerControl') colorPickerControl?: ElementRef<HTMLElement>;
+  // Receive section data from the parent; @Output reports deletion or errors.
   @Input({ required: true }) wallId!: number;
   @Input({ required: true }) section!: MusicSection;
   @Output() deleted = new EventEmitter<number>();
@@ -49,6 +52,7 @@ export class WallSectionComponent {
 
   @HostListener('document:click', ['$event'])
   closeColorPickerOnOutsideClick(event: MouseEvent): void {
+    // Close the palette when the click is outside its control.
     const target = event.target as Node | null;
     if (
       this.colorPickerOpen &&
@@ -74,6 +78,7 @@ export class WallSectionComponent {
     this.updateSection(this.section.name, color);
   }
 
+  // After confirmation and backend deletion, tell the parent to remove this section.
   deleteSection(): void {
     if (!window.confirm('Delete the section "' + this.section.name + '" and all its items?')) return;
     this.musicWallService.deleteSection(this.wallId, this.section.id).subscribe({
@@ -82,9 +87,11 @@ export class WallSectionComponent {
     });
   }
 
+  // Add the backend's saved item so the page uses its generated id and catalogue details.
   addSelection(selection: CatalogSelection): void {
     const item = selection.item as Track | Album;
     if (!item.id) return;
+    // Send one catalogue id and status; the backend supplies title, artist and type.
     const request: Pick<MusicItem, 'status' | 'catalogTrackId' | 'catalogAlbumId'> = {
       status: 'TO_LISTEN',
       catalogTrackId: selection.type === 'TRACK' ? item.id : null,
@@ -103,6 +110,7 @@ export class WallSectionComponent {
     });
   }
 
+  // Remove the item after its child component reports successful deletion.
   removeItem(itemId: number): void {
     this.section.items = this.section.items.filter(item => item.id !== itemId);
   }
@@ -112,6 +120,7 @@ export class WallSectionComponent {
       this.wallId, this.section.id, { name, noteColor }
     ).subscribe({
       next: updated => {
+        // Update name/color without replacing the section's current items.
         this.section.name = updated.name;
         this.section.noteColor = updated.noteColor;
         this.editing = false;

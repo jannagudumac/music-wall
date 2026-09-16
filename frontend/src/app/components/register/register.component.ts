@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 
+// Collects registration details and navigates after successful account creation.
 @Component({
   selector: 'app-register',
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
@@ -22,12 +23,14 @@ export class RegisterComponent {
     private authService: AuthService,
     private router: Router
   ) {
+    // Form validation gives quick feedback; the backend also checks the input.
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 
+  // Show invalid fields before submitting and display errors returned by the backend.
   onSubmit(): void {
     if (this.registerForm.invalid) {
       return;

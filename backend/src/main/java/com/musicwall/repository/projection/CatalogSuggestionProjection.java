@@ -1,8 +1,7 @@
 package com.musicwall.repository.projection;
 
-/**
- * Internal view of one ranked row returned by PostgreSQL.
- */
+// Spring Data reads the SQL result through these getters; the score helps the service rank
+// suggestions.
 public interface CatalogSuggestionProjection {
 
     Long getId();

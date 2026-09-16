@@ -3,6 +3,7 @@ package com.musicwall.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
+// DTO is shared by requests and responses; the service supplies the id, title, artist and type.
 public class MusicItemDTO {
 
     private Long id;
@@ -14,6 +15,7 @@ public class MusicItemDTO {
     @Pattern(regexp = "TO_LISTEN|LISTENED", message = "Invalid listening status")
     private String status;
 
+    // Send either a track id or an album id; the service rejects both or neither.
     private Long catalogTrackId;
     private Long catalogAlbumId;
 

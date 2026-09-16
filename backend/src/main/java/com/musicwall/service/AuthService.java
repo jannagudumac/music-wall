@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+// The service handles account creation and login.
 @Service
 public class AuthService {
 
@@ -20,6 +21,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
+    // Spring supplies the dependencies through this constructor.
     public AuthService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
@@ -33,19 +35,24 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+        // Reject a username that is already registered.
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new BusinessException("This username is already used");
         }
 
+        // Create the account with a role chosen by the server, not by the user.
         UserEntity user = new UserEntity();
         user.setUsername(request.getUsername());
+        // Hash the password with BCrypt so the plain password is never stored.
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("USER");
+        // Save the account; the database generates its id.
         userRepository.save(user);
 
         return createResponse(user);
     }
 
+    // Ask Spring Security to check the username and password before issuing a JWT.
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -60,6 +67,7 @@ public class AuthService {
         return createResponse(user);
     }
 
+    // Return the JWT, username and role, but never the password.
     private AuthResponse createResponse(UserEntity user) {
         AuthResponse response = new AuthResponse();
         response.setToken(jwtUtil.generateToken(user.getUsername()));

@@ -7,18 +7,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+// JPA stores registered accounts in app_user; API responses exclude passwords.
 @Entity
 @Table(name = "app_user")
 public class UserEntity {
 
+    // The database generates the id when an account is saved.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Require a unique username to distinguish accounts.
     @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
+    // Store a BCrypt password hash, never the plain password.
     private String password;
 
     @Column(nullable = false)
@@ -28,6 +32,7 @@ public class UserEntity {
     @Column(length = 300)
     private String bio;
 
+    // PostgreSQL BYTEA stores the uploaded image bytes; the file type is saved separately.
     @Column(columnDefinition = "bytea")
     private byte[] avatarImage;
 

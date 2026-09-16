@@ -1,5 +1,6 @@
 package com.musicwall.entity;
 
+// NONE uses a solid color; the IMAGE values select the frontend's background images.
 public enum Wallpaper {
     NONE,
     IMAGE_1,

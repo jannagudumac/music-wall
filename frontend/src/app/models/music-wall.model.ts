@@ -1,3 +1,4 @@
+// Keep background names consistent with the backend enum and available images.
 export type WallWallpaper =
   'NONE' |
   'IMAGE_1' |
@@ -10,6 +11,7 @@ export type WallWallpaper =
   'IMAGE_8' |
   'IMAGE_9';
 
+// The backend supplies id and ownerUsername; requests send only editable wall fields.
 export interface MusicWall {
   id: number;
   name: string;
@@ -22,6 +24,7 @@ export type MusicItemType = 'TRACK' | 'ALBUM';
 export type ListeningStatus = 'TO_LISTEN' | 'LISTENED';
 export type SectionNoteColor = 'CREAM' | 'ROSE' | 'PEACH' | 'MINT' | 'SKY' | 'LAVENDER';
 
+// The backend supplies title/artist/type and links the item to a catalogue track or album.
 export interface MusicItem {
   id: number;
   title: string;
@@ -39,6 +42,7 @@ export interface MusicSection {
   items: MusicItem[];
 }
 
+// Wall details include sections; wall list responses leave them out.
 export interface MusicWallDetail extends MusicWall {
   sections: MusicSection[];
 }

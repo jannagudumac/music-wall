@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// The controller receives wall and sharing requests and delegates the work to MusicWallService.
 @RestController
 @RequestMapping("/api/walls")
 public class MusicWallController {
@@ -30,20 +31,24 @@ public class MusicWallController {
         this.musicWallService = musicWallService;
     }
 
+    // @RequestBody reads JSON and @Valid checks it before creation; success returns HTTP 201.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MusicWallDTO createWall(
             Authentication authentication,
             @Valid @RequestBody MusicWallDTO request
     ) {
+        // Use the logged-in username supplied by Spring Security, not a client-sent identity.
         return musicWallService.createWall(authentication.getName(), request);
     }
 
+    // Return walls owned by or shared with the logged-in user.
     @GetMapping
     public List<MusicWallDTO> getMyWalls(Authentication authentication) {
         return musicWallService.getWallsForUser(authentication.getName());
     }
 
+    // Read the wall id from the URL and return its details after an access check.
     @GetMapping("/{id}")
     public MusicWallDTO getWall(
             @PathVariable Long id,
@@ -52,6 +57,7 @@ public class MusicWallController {
         return musicWallService.getWall(id, authentication.getName());
     }
 
+    // Only the owner can change wall settings.
     @PutMapping("/{id}")
     public MusicWallDTO updateWall(
             @PathVariable Long id,
@@ -61,6 +67,7 @@ public class MusicWallController {
         return musicWallService.updateWall(id, authentication.getName(), request);
     }
 
+    // Change only the appearance, without requiring a wall name.
     @PutMapping("/{id}/appearance")
     public MusicWallDTO updateWallAppearance(
             @PathVariable Long id,
@@ -91,6 +98,7 @@ public class MusicWallController {
         );
     }
 
+    // Validate the new member's username; the service checks that the caller owns the wall.
     @PostMapping("/{wallId}/members")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO addMember(
@@ -103,6 +111,7 @@ public class MusicWallController {
         );
     }
 
+    // Remove sharing without deleting the account; success returns HTTP 204 with no body.
     @DeleteMapping("/{wallId}/members/{username}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeMember(
@@ -113,6 +122,7 @@ public class MusicWallController {
         musicWallService.removeMember(wallId, authentication.getName(), username);
     }
 
+    // Delete the wall and its contents; success returns HTTP 204 with no body.
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWall(

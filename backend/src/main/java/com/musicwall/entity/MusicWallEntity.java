@@ -16,10 +16,12 @@ import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
+// JPA stores each wall with its owner, background and shared members.
 @Entity
 @Table(name = "music_wall")
 public class MusicWallEntity {
 
+    // The database generates the id when a new wall is saved.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,10 +36,12 @@ public class MusicWallEntity {
     @Column(name = "wall_color", length = 7)
     private String wallColor = "#FFFFFF";
 
+    // Keep the owner separate from the members because their permissions differ.
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
+    // The wall_members join table links walls to registered users who share them.
     @ManyToMany
     @JoinTable(
             name = "wall_members",

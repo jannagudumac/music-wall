@@ -3,6 +3,8 @@ package com.musicwall.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+// DTO returns track details as simple fields; album information can be missing for standalone
+// tracks.
 public class TrackDTO {
 
     private Long id;

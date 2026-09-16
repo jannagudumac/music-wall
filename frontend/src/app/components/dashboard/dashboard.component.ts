@@ -7,6 +7,7 @@ import { MusicWall } from '../../models/music-wall.model';
 import { AuthService } from '../../services/auth.service';
 import { MusicWallService } from '../../services/music-wall.service';
 
+// Loads the user's walls and sends searches to the catalogue page.
 @Component({
   selector: 'app-dashboard',
   imports: [CommonModule, FormsModule, RouterLink],
@@ -36,6 +37,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get recentWalls(): MusicWall[] {
+    // Show the first three walls because the API already sorts newest first.
     return this.walls.slice(0, 3);
   }
 

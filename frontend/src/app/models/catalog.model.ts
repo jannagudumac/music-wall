@@ -1,3 +1,4 @@
+// Describes catalogue responses for TypeScript; null marks information that can be missing.
 export interface Artist {
   id: number | null;
   name: string;
@@ -31,6 +32,7 @@ export interface Track {
   genres: Genre[];
 }
 
+// Artist details include the artist plus their albums and tracks, matching the backend response.
 export interface ArtistDetail {
   artist: Artist;
   albums: Album[];

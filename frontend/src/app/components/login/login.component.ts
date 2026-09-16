@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 
+// Collects login details with a reactive form and navigates after successful login.
 @Component({
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
@@ -28,11 +29,13 @@ export class LoginComponent {
       password: ['', Validators.required]
     });
 
+    // The interceptor adds this reason when the backend rejects a saved token.
     if (this.route.snapshot.queryParamMap.get('reason') === 'session-expired') {
       this.errorMessage = 'Your session expired. Please log in again.';
     }
   }
 
+  // Show invalid fields before submitting; on success, the service saves the session.
   onSubmit(): void {
     if (this.loginForm.invalid) {
       return;

@@ -11,14 +11,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+// JPA stores each section item with its listening status and catalogue link.
 @Entity
 @Table(name = "music_item")
 public class MusicItemEntity {
 
+    // The database generates the id when a new item is saved.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Keep a copy of the catalogue title and artist for displaying this saved item.
     @Column(nullable = false, length = 180)
     private String title;
 
@@ -26,6 +29,7 @@ public class MusicItemEntity {
     private String artist;
 
     @Enumerated(EnumType.STRING)
+    // EnumType.STRING stores TRACK or ALBUM as text, not an enum position number.
     @Column(name = "item_type", nullable = false)
     private MusicItemType itemType;
 
@@ -38,6 +42,7 @@ public class MusicItemEntity {
     private MusicSectionEntity section;
 
     @ManyToOne
+    // The service requires exactly one link: a catalogue track or a catalogue album.
     @JoinColumn(name = "catalog_track_id")
     private TrackEntity catalogTrack;
 

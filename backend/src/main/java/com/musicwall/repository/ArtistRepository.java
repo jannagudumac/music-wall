@@ -8,10 +8,12 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+// The repository reads and saves artists. JpaRepository provides the main CRUD operations.
 public interface ArtistRepository extends JpaRepository<ArtistEntity, Long> {
 
     List<ArtistEntity> findAllByOrderByNameAsc();
 
+    // Use PostgreSQL pg_trgm to find similar artist names and sort matches by relevance.
     @Query(value = """
             SELECT a.*
             FROM artist a
@@ -29,6 +31,7 @@ public interface ArtistRepository extends JpaRepository<ArtistEntity, Long> {
             """, nativeQuery = true)
     List<ArtistEntity> searchSimilar(@Param("query") String query);
 
+    // Prepare a limited list of autocomplete matches, giving closer name matches a higher score.
     @Query(value = """
             SELECT a.id AS id,
                    'ARTIST' AS type,

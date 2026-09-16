@@ -3,6 +3,7 @@ package com.musicwall.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+// DTO receives registration input; @NotBlank requires values and @Size limits their length.
 public class RegisterRequest {
 
     @NotBlank(message = "Username is required")

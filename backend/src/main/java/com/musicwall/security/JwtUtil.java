@@ -9,6 +9,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+// Creates signed JWTs for login and checks tokens received in later requests.
 @Component
 public class JwtUtil {
 
@@ -18,6 +19,7 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private Long expiration;
 
+    // Put the username and expiry date in a signed token so changes can be detected.
     public String generateToken(String username) {
         return Jwts.builder()
                 .subject(username)
@@ -27,6 +29,7 @@ public class JwtUtil {
                 .compact();
     }
 
+    // Check the signature and expiry before extracting the username.
     public String extractUsername(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
@@ -36,6 +39,7 @@ public class JwtUtil {
                 .getSubject();
     }
 
+    // Check that the token is still valid and belongs to the expected user.
     public boolean validateToken(String token, String username) {
         String tokenUsername = extractUsername(token);
         Date expirationDate = Jwts.parser()

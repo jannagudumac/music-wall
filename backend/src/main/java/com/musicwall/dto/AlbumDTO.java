@@ -3,6 +3,7 @@ package com.musicwall.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+// DTO returns album details without database entities; tracks are filled for the album detail page.
 public class AlbumDTO {
 
     private Long id;

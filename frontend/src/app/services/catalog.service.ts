@@ -12,11 +12,13 @@ import {
   Track
 } from '../models/catalog.model';
 
+// Sends catalogue searches and detail requests to the backend with HttpClient.
 @Injectable({ providedIn: 'root' })
 export class CatalogService {
 
   private apiUrl = environment.apiUrl + '/catalog';
 
+  // A subscription starts the HTTP request; the Observable delivers the response or an error.
   constructor(private http: HttpClient) {
   }
 

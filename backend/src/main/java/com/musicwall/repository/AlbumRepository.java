@@ -8,12 +8,15 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+// The repository reads and saves albums. JpaRepository provides the main CRUD operations.
 public interface AlbumRepository extends JpaRepository<AlbumEntity, Long> {
 
     List<AlbumEntity> findAllByOrderByTitleAsc();
 
+    // Find this artist's albums, ordered by release year and then title.
     List<AlbumEntity> findByArtistIdOrderByReleaseYearAscTitleAsc(Long artistId);
 
+    // Search album titles and artist names; PostgreSQL pg_trgm also finds similar spellings.
     @Query(value = """
             SELECT al.*
             FROM album al
@@ -30,6 +33,7 @@ public interface AlbumRepository extends JpaRepository<AlbumEntity, Long> {
             """, nativeQuery = true)
     List<AlbumEntity> searchSimilar(@Param("query") String query);
 
+    // Give autocomplete matches a relevance score and return only a limited number.
     @Query(value = """
             SELECT al.id AS id,
                    'ALBUM' AS type,

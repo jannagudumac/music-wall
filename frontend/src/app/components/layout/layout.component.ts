@@ -4,6 +4,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { PageHeaderService } from '../../services/page-header.service';
 
+// Provides the shared page layout, header and navigation.
 @Component({
   selector: 'app-layout',
   imports: [RouterLink, RouterOutlet, SidebarComponent],
@@ -22,6 +23,7 @@ export class LayoutComponent {
   }
 
   get pageTitle(): string {
+    // Use the loaded wall name when available; otherwise use the page title from the URL.
     const detailTitle = this.pageHeaderService.detailTitle();
     if (detailTitle) {
       return detailTitle;

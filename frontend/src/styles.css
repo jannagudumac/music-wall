@@ -66,7 +66,7 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Common styles used by several pages. */
+/* Shared styles keep the same look across pages. */
 .page-label {
   color: var(--color-dominant);
   font-size: 11px;
@@ -176,7 +176,7 @@ a {
   color: var(--color-support);
 }
 
-/* The same wallpaper classes are used by wall previews and the wall page. */
+/* Use the same backgrounds for wall previews and wall details. */
 .wallpaper-image_1 { background-image: url('/assets/wallpapers/1.jpg'); }
 .wallpaper-image_2 { background-image: url('/assets/wallpapers/2.png'); }
 .wallpaper-image_3 { background-image: url('/assets/wallpapers/3.jpg'); }

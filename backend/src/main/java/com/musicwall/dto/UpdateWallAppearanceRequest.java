@@ -3,6 +3,7 @@ package com.musicwall.dto;
 import com.musicwall.entity.Wallpaper;
 import jakarta.validation.constraints.Pattern;
 
+// Receives only background/color changes, so the user does not need to resend the wall name.
 public class UpdateWallAppearanceRequest {
 
     private Wallpaper wallpaper = Wallpaper.NONE;

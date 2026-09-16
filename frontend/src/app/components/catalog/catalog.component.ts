@@ -8,6 +8,7 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, switchMap } f
 import { CatalogSearchResult, CatalogSuggestion } from '../../models/catalog.model';
 import { CatalogService } from '../../services/catalog.service';
 
+// Displays catalogue results and a separate autocomplete list.
 @Component({
   selector: 'app-catalog',
   imports: [CommonModule, ReactiveFormsModule],
@@ -36,6 +37,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
     this.searchForm = this.formBuilder.group({ query: [''] });
   }
 
+  // Reuse a search from the dashboard URL, then load results and start autocomplete.
   ngOnInit(): void {
     const initialQuery = this.route.snapshot.queryParamMap.get('query') || '';
     this.searchForm.patchValue({ query: initialQuery });
@@ -44,9 +46,11 @@ export class CatalogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Stop listening to form changes when the user leaves the page.
     this.suggestionSubscription?.unsubscribe();
   }
 
+  // Send the search text to the backend and display results or an error.
   search(): void {
     this.showSuggestions = false;
     this.activeSuggestionIndex = -1;
@@ -73,6 +77,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
     this.search();
   }
 
+  // Change the displayed category without sending another request.
   setFilter(filter: 'all' | 'tracks' | 'albums' | 'artists'): void {
     this.activeFilter = filter;
   }
@@ -97,9 +102,11 @@ export class CatalogComponent implements OnInit, OnDestroy {
   }
 
   onSearchBlur(): void {
+    // Allow the suggestion click to finish before closing the dropdown.
     window.setTimeout(() => this.showSuggestions = false, 150);
   }
 
+  // Let the user choose suggestions with arrows, Enter and Escape.
   onSearchKeydown(event: KeyboardEvent): void {
     if (!this.showSuggestions || this.suggestions.length === 0) {
       return;
@@ -124,6 +131,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Open the detail route matching the suggestion's artist, album or track type.
   selectSuggestion(suggestion: CatalogSuggestion): void {
     this.showSuggestions = false;
     const routeType = suggestion.type === 'ARTIST'
@@ -152,8 +160,10 @@ export class CatalogComponent implements OnInit, OnDestroy {
     }
 
     this.suggestionSubscription = queryControl.valueChanges.pipe(
+      // debounceTime waits for a typing pause; distinctUntilChanged skips repeated text.
       debounceTime(650),
       distinctUntilChanged(),
+      // switchMap stops the previous search when a newer query is emitted.
       switchMap(value => {
         const query = String(value || '').trim();
         this.activeSuggestionIndex = -1;

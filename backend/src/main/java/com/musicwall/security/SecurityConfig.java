@@ -18,6 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+// Defines which API routes need login; wall permissions are checked separately in the services.
 @Configuration
 public class SecurityConfig {
 
@@ -32,9 +33,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Use JWTs instead of a cookie-based login session.
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // Allow login and public catalogue/profile reads; other routes require
+                // authentication.
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
@@ -43,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/profiles/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                // No server login session is stored: each protected request needs its JWT.
                 .sessionManagement(session -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS
                 ))
@@ -54,15 +59,18 @@ public class SecurityConfig {
                         }
                 ));
 
+        // Run the JWT filter before Spring Security decides whether the request is allowed.
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
+    // Use BCrypt to hash passwords and check them without storing plain passwords.
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Let Spring Security check credentials with the stored user and password encoder.
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration
@@ -70,6 +78,8 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+    // CORS allows browser requests from the configured frontend; protected routes still require a
+    // JWT.
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

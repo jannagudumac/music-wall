@@ -11,6 +11,7 @@ import {
   User
 } from '../models/music-wall.model';
 
+// Sends wall, member, section and item requests to the backend with HttpClient.
 @Injectable({
   providedIn: 'root'
 })
@@ -26,6 +27,7 @@ export class MusicWallService {
   }
 
   createWall(request: Pick<MusicWall, 'name' | 'wallpaper' | 'wallColor'>): Observable<MusicWall> {
+    // Pick keeps only editable input fields, without requiring the response's id or owner.
     return this.http.post<MusicWall>(this.apiUrl, request);
   }
 
@@ -71,11 +73,13 @@ export class MusicWallService {
   }
 
   removeMember(wallId: number, username: string): Observable<void> {
+    // Encode the username so special characters do not break the URL.
     return this.http.delete<void>(
       `${this.apiUrl}/${wallId}/members/${encodeURIComponent(username)}`
     );
   }
 
+  // Include the parent wall in section URLs so the backend can check where the section belongs.
   createSection(
     wallId: number,
     request: Pick<MusicSection, 'name' | 'noteColor'>
@@ -103,6 +107,7 @@ export class MusicWallService {
     );
   }
 
+  // Send status and one catalogue id; the backend supplies the item title, artist and type.
   createItem(
     wallId: number,
     sectionId: number,
@@ -136,6 +141,7 @@ export class MusicWallService {
     );
   }
 
+  // Build the same parent URL for item creation, updates and deletion.
   private itemUrl(wallId: number, sectionId: number): string {
     return this.apiUrl + '/' + wallId + '/sections/' + sectionId + '/items';
   }

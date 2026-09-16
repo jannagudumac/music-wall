@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 
+// Displays navigation and lets the user log out.
 @Component({
   selector: 'app-sidebar',
   imports: [RouterLink, RouterLinkActive],
@@ -11,6 +12,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SidebarComponent {
 
+  // The parent controls collapse state; @Output asks it to change that state.
   @Input() collapsed = false;
   @Output() collapseRequested = new EventEmitter<void>();
 
@@ -28,6 +30,7 @@ export class SidebarComponent {
     this.collapseRequested.emit();
   }
 
+  // Clear the local session, then return to the login page.
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

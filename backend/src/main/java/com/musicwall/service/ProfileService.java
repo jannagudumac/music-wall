@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 
+// The service manages biographies, passwords and avatar uploads.
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
@@ -27,6 +28,7 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // Return public profile fields without passwords or image bytes.
     @Transactional(readOnly = true)
     public ProfileDTO getProfile(String username) {
         return convertToDTO(findUser(username));
@@ -35,6 +37,7 @@ public class ProfileService {
     @Transactional
     public ProfileDTO updateProfile(String username, ProfileDTO request) {
         UserEntity user = findUser(username);
+        // Update only the biography; ignore username and avatar fields sent in this request.
         user.setBio(cleanOptional(request.getBio()));
         return convertToDTO(userRepository.save(user));
     }
@@ -42,6 +45,7 @@ public class ProfileService {
     @Transactional
     public void changePassword(String username, ChangePasswordRequest request) {
         UserEntity user = findUser(username);
+        // Check the current password against its hash before saving a new password hash.
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new BusinessException("Current password is incorrect");
         }
@@ -49,8 +53,11 @@ public class ProfileService {
         userRepository.save(user);
     }
 
+    // Check the upload's size and declared file type; this does not check the actual image
+    // contents.
     @Transactional
     public ProfileDTO updateAvatar(String username, MultipartFile file) {
+        // Reject empty, oversized or unsupported uploads before reading the file.
         if (file.isEmpty()) {
             throw new BusinessException("Choose an image first");
         }
@@ -67,10 +74,12 @@ public class ProfileService {
         } catch (IOException exception) {
             throw new BusinessException("Could not read avatar image");
         }
+        // Keep the file type so the controller can send the right Content-Type for the image.
         user.setAvatarContentType(file.getContentType());
         return convertToDTO(userRepository.save(user));
     }
 
+    // Return the image bytes and file type; the controller prepares the HTTP response.
     @Transactional(readOnly = true)
     public AvatarData getAvatar(String username) {
         UserEntity user = findUser(username);
@@ -80,6 +89,7 @@ public class ProfileService {
         return new AvatarData(user.getAvatarImage(), user.getAvatarContentType());
     }
 
+    // Return an avatar URL instead of including image bytes in profile JSON.
     private ProfileDTO convertToDTO(UserEntity user) {
         ProfileDTO dto = new ProfileDTO();
         dto.setUsername(user.getUsername());
@@ -95,6 +105,7 @@ public class ProfileService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
+    // Blank text clears the biography; otherwise remove spaces at the start and end.
     private String cleanOptional(String value) {
         return value == null || value.isBlank() ? null : value.trim();
     }

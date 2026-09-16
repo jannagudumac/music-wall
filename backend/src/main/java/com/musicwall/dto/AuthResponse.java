@@ -1,5 +1,6 @@
 package com.musicwall.dto;
 
+// DTO returns the JWT and account identity after login or registration, never the password.
 public class AuthResponse {
 
     private String token;

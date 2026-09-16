@@ -9,10 +9,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+// JPA maps each section to the music_section table and links it to a wall.
 @Entity
 @Table(name = "music_section")
 public class MusicSectionEntity {
 
+    // The database generates the id when a new section is saved.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +25,7 @@ public class MusicSectionEntity {
     @Column(name = "note_color", length = 20)
     private String noteColor = "CREAM";
 
+    // Several sections can belong to one wall; the service chooses the required parent.
     @ManyToOne
     @JoinColumn(name = "wall_id", nullable = false)
     private MusicWallEntity wall;

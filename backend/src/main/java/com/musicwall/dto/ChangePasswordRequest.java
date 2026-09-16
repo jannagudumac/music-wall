@@ -3,6 +3,8 @@ package com.musicwall.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+// DTO receives the current and new passwords; validation requires at least eight characters for the
+// new one.
 public class ChangePasswordRequest {
 
     @NotBlank(message = "Current password is required")

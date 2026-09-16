@@ -12,6 +12,7 @@ export interface CatalogSelection {
   item: Track | Album;
 }
 
+// Searches the catalogue and lets the parent section save the selected track or album.
 @Component({
   selector: 'app-catalog-search',
   imports: [CommonModule, FormsModule],
@@ -20,6 +21,7 @@ export interface CatalogSelection {
 })
 export class CatalogSearchComponent implements OnInit, OnDestroy {
 
+  // @Input receives the parent's data; @Output sends selections or close events back.
   @Input() existingItems: MusicItem[] = [];
   @Input() saving = false;
   @Output() selected = new EventEmitter<CatalogSelection>();
@@ -37,6 +39,7 @@ export class CatalogSearchComponent implements OnInit, OnDestroy {
   constructor(private catalogService: CatalogService) {
   }
 
+  // Use RxJS to wait for typing pauses and switch to the latest search.
   ngOnInit(): void {
     this.queryChanges.pipe(
       debounceTime(400),
@@ -57,6 +60,7 @@ export class CatalogSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // takeUntil stops the search listener when this popup is destroyed.
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -77,11 +81,13 @@ export class CatalogSearchComponent implements OnInit, OnDestroy {
   }
 
   isAdded(type: 'TRACK' | 'ALBUM', id: number): boolean {
+    // Mark catalogue entries already present in the section.
     return this.existingItems.some(item => type === 'TRACK'
       ? item.catalogTrackId === id
       : item.catalogAlbumId === id);
   }
 
+  // Display tracks and albums, or explain that no results were found.
   private showResults(result: CatalogSearchResult): void {
     this.tracks = result.tracks;
     this.albums = result.albums;

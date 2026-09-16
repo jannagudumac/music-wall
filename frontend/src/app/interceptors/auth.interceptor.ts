@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../services/auth.service';
 
+// Adds the saved JWT to requests and handles rejected sessions.
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
@@ -27,6 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const token = this.authService.getToken();
 
     if (token) {
+      // Clone the request because HttpRequest cannot be changed directly.
       request = request.clone({
         setHeaders: {
           Authorization: 'Bearer ' + token
@@ -36,9 +38,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        // A 401 means the authentication token is no longer accepted.
-        // A 403 means the user is still authenticated but is not allowed to
-        // perform one particular action, so it must not destroy the session.
+        // Log out on HTTP 401, but keep the session on 403 because that means a permission was
+        // denied.
         const sessionRejected = error.status === 401;
         const authenticationRequest = request.url.includes('/auth/');
 

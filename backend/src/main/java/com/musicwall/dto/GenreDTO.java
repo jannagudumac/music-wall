@@ -1,5 +1,6 @@
 package com.musicwall.dto;
 
+// DTO returns a genre's id and name, including inside album and track responses.
 public class GenreDTO {
 
     private Long id;

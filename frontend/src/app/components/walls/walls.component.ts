@@ -7,6 +7,7 @@ import { MusicWall } from '../../models/music-wall.model';
 import { MusicWallService } from '../../services/music-wall.service';
 import { AuthService } from '../../services/auth.service';
 
+// Displays the user's walls and handles creation, renaming and deletion.
 @Component({
   selector: 'app-walls',
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
@@ -38,6 +39,7 @@ export class WallsComponent implements OnInit {
     });
   }
 
+  // Open the create form when the URL requests it, then load the walls.
   ngOnInit(): void {
     this.showCreateForm = this.route.snapshot.queryParamMap.get('create') === 'true';
     this.loadWalls();
@@ -57,6 +59,7 @@ export class WallsComponent implements OnInit {
     });
   }
 
+  // Display the backend's walls or an error, and stop the loading indicator.
   loadWalls(): void {
     this.loading = true;
     this.errorMessage = '';
@@ -73,8 +76,10 @@ export class WallsComponent implements OnInit {
     });
   }
 
+  // Add a new wall to the list only after the backend returns its saved data.
   createWall(): void {
     if (this.wallForm.invalid) {
+      // Show validation errors even for fields the user has not visited yet.
       this.wallForm.markAllAsTouched();
       return;
     }
@@ -101,6 +106,7 @@ export class WallsComponent implements OnInit {
   }
 
   startEdit(wall: MusicWall): void {
+    // Only show owner actions to the owner; the backend checks this permission too.
     if (wall.ownerUsername !== this.authService.getUsername()) return;
     this.editingWallId = wall.id;
     this.editingWallField = 'name';
@@ -119,6 +125,7 @@ export class WallsComponent implements OnInit {
     const value = this.editingWallValue.trim();
     if (!value) return;
 
+    // Resend the existing appearance when renaming so the update does not reset it.
     this.musicWallService.updateWall(wall.id, {
       name: value,
       wallpaper: wall.wallpaper || 'NONE',
@@ -137,6 +144,7 @@ export class WallsComponent implements OnInit {
     });
   }
 
+  // Confirm deletion, then remove the wall from the page after backend success.
   deleteWall(wall: MusicWall): void {
     if (wall.ownerUsername !== this.authService.getUsername()) return;
     const confirmed = window.confirm('Delete "' + wall.name + '" and all its contents?');

@@ -3,6 +3,7 @@ package com.musicwall.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+// DTO groups the artist, albums and tracks in the JSON structure expected by the frontend.
 public class ArtistDetailDTO {
 
     private ArtistDTO artist;

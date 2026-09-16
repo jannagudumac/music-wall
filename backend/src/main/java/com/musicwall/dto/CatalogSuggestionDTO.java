@@ -1,5 +1,6 @@
 package com.musicwall.dto;
 
+// DTO contains autocomplete labels and ids; the score is used internally, not sent to the frontend.
 public class CatalogSuggestionDTO {
 
     private String id;

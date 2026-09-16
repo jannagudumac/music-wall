@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MusicWallDetail, WallWallpaper } from '../../models/music-wall.model';
 import { MusicWallService } from '../../services/music-wall.service';
 
+// Lets the owner rename a wall or change its background, then informs the parent page.
 @Component({
   selector: 'app-wall-header',
   imports: [CommonModule, FormsModule],
@@ -13,9 +14,12 @@ import { MusicWallService } from '../../services/music-wall.service';
 })
 export class WallHeaderComponent {
 
+  // @ViewChild gives access to the popup's HTML element for detecting outside clicks.
   @ViewChild('appearanceControl') appearanceControl?: ElementRef<HTMLElement>;
+  // Receive the wall and owner flag from the parent.
   @Input({ required: true }) wall!: MusicWallDetail;
   @Input() isOwner = false;
+  // @Output reports saved changes, errors or a request to delete the wall.
   @Output() wallChanged = new EventEmitter<MusicWallDetail>();
   @Output() deleteRequested = new EventEmitter<void>();
   @Output() error = new EventEmitter<string>();
@@ -36,6 +40,7 @@ export class WallHeaderComponent {
 
   @HostListener('document:click', ['$event'])
   closeAppearanceOnOutsideClick(event: MouseEvent): void {
+    // Keep the popup open for clicks inside it, including its toggle button.
     const target = event.target as Node | null;
     if (
       this.appearanceOpen &&
@@ -57,6 +62,7 @@ export class WallHeaderComponent {
     this.editingValue = '';
   }
 
+  // Save the name before notifying the parent page.
   saveField(): void {
     if (!this.editingField) return;
     const value = this.editingValue.trim();
@@ -67,6 +73,7 @@ export class WallHeaderComponent {
       wallColor: this.wall.wallColor
     }).subscribe({
       next: updated => {
+        // Keep the sections because the update response returns only wall settings.
         this.wall.name = updated.name;
         this.wallChanged.emit(this.wall);
         this.cancelEdit();
@@ -89,6 +96,7 @@ export class WallHeaderComponent {
     this.saveAppearance('NONE', wallColor);
   }
 
+  // Save the appearance without replacing the wall's existing sections.
   private saveAppearance(wallpaper: WallWallpaper, wallColor: string): void {
     if (!this.isOwner) return;
     this.musicWallService.updateWallAppearance(this.wall.id, { wallpaper, wallColor }).subscribe({

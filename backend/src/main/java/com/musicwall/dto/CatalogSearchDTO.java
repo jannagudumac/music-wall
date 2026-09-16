@@ -3,6 +3,7 @@ package com.musicwall.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+// DTO groups search results by artist, album, track and genre; no results means empty lists.
 public class CatalogSearchDTO {
 
     private List<ArtistDTO> artists = new ArrayList<>();

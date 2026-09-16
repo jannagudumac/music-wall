@@ -14,10 +14,12 @@ import jakarta.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+// JPA maps catalogue tracks to the track table.
 @Entity
 @Table(name = "track")
 public class TrackEntity {
 
+    // The database generates the id when a new track is saved.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,13 +31,16 @@ public class TrackEntity {
     private Integer durationSeconds;
 
     @ManyToOne
+    // Each track needs an artist.
     @JoinColumn(name = "artist_id", nullable = false)
     private ArtistEntity artist;
 
     @ManyToOne
+    // A track can exist without an album, so album_id can be null.
     @JoinColumn(name = "album_id")
     private AlbumEntity album;
 
+    // The track_genre join table links tracks to genres without duplicating genre records.
     @ManyToMany
     @JoinTable(
             name = "track_genre",

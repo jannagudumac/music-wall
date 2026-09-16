@@ -10,6 +10,7 @@ import com.musicwall.repository.MusicWallRepository;
 
 import lombok.RequiredArgsConstructor;
 
+// Keeps wall permission checks in one place for all services.
 @Service
 @RequiredArgsConstructor
 public class WallAccessService {
@@ -19,6 +20,7 @@ public class WallAccessService {
     @Transactional(readOnly = true)
     public MusicWallEntity findAccessibleWall(String username, Long wallId) {
         MusicWallEntity wall = findWall(wallId);
+        // Owners and members can read the wall and change its content.
         if (isOwner(wall, username) || wall.getMembers().stream()
                 .anyMatch(member -> member.getUsername().equals(username))) {
             return wall;
@@ -28,6 +30,7 @@ public class WallAccessService {
 
     @Transactional(readOnly = true)
     public MusicWallEntity findOwnedWall(String username, Long wallId) {
+        // Only the owner can change settings, manage members or delete the wall.
         MusicWallEntity wall = findWall(wallId);
         if (!isOwner(wall, username)) {
             throw new ForbiddenException(

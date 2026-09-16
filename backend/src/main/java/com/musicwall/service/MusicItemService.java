@@ -14,6 +14,7 @@ import com.musicwall.repository.AlbumRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+// The service manages music items and checks which catalogue entry they refer to.
 @Service
 public class MusicItemService {
 
@@ -37,6 +38,7 @@ public class MusicItemService {
         this.albumRepository = albumRepository;
     }
 
+    // Check wall access and the section's parent before adding an item.
     @Transactional
     public MusicItemDTO createItem(
             String username,
@@ -54,6 +56,7 @@ public class MusicItemService {
         return convertToDTO(musicItemRepository.save(item));
     }
 
+    // Check that the item belongs to the requested section and wall before updating it.
     @Transactional
     public MusicItemDTO updateItem(
             String username,
@@ -69,6 +72,7 @@ public class MusicItemService {
         return convertToDTO(musicItemRepository.save(item));
     }
 
+    // Apply the same access checks before deleting an item.
     @Transactional
     public void deleteItem(
             String username,
@@ -90,6 +94,7 @@ public class MusicItemService {
         MusicSectionEntity section = musicSectionRepository.findById(sectionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found"));
 
+        // Reject a section that belongs to another wall.
         if (!section.getWall().getId().equals(wallId)) {
             throw new ResourceNotFoundException("Section not found");
         }
@@ -101,6 +106,7 @@ public class MusicItemService {
         MusicItemEntity item = musicItemRepository.findById(itemId)
                 .orElseThrow(() -> new ResourceNotFoundException("Music item not found"));
 
+        // Reject an item that belongs to another section.
         if (!item.getSection().getId().equals(sectionId)) {
             throw new ResourceNotFoundException("Music item not found");
         }
@@ -111,12 +117,15 @@ public class MusicItemService {
     private void applyRequest(MusicItemEntity item, MusicItemDTO request) {
         boolean hasTrack = request.getCatalogTrackId() != null;
         boolean hasAlbum = request.getCatalogAlbumId() != null;
+        // Require exactly one catalogue choice: a track or an album, never both or neither.
         if (hasTrack == hasAlbum) {
             throw new BusinessException("Choose exactly one track or album from the catalogue");
         }
 
+        // Clear the previous link when switching between a track and an album.
         item.setCatalogTrack(null);
         item.setCatalogAlbum(null);
+        // Copy the title, artist and type from the catalogue, not from user input.
         if (hasTrack) {
             var track = trackRepository.findById(request.getCatalogTrackId())
                     .orElseThrow(() -> new ResourceNotFoundException("Track not found"));
@@ -132,9 +141,11 @@ public class MusicItemService {
             item.setArtist(album.getArtist().getName());
             item.setItemType(MusicItemType.ALBUM);
         }
+        // Convert the status to an enum after @Valid has checked the allowed values.
         item.setStatus(ListeningStatus.valueOf(request.getStatus()));
     }
 
+    // Build the response with simple fields and catalogue ids, not related entities.
     private MusicItemDTO convertToDTO(MusicItemEntity item) {
         MusicItemDTO dto = new MusicItemDTO();
         dto.setId(item.getId());

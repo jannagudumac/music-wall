@@ -11,6 +11,7 @@ import { WallHeaderComponent } from '../wall-header/wall-header.component';
 import { WallMembersComponent } from '../wall-members/wall-members.component';
 import { WallSectionComponent } from '../wall-section/wall-section.component';
 
+// Loads a wall and coordinates its header, members and section components.
 @Component({
   selector: 'app-wall-detail',
   imports: [
@@ -58,6 +59,7 @@ export class WallDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Clear the shared wall title when leaving this page so other pages do not keep it.
     this.pageHeaderService.clear();
   }
 
@@ -65,6 +67,7 @@ export class WallDetailComponent implements OnInit, OnDestroy {
     return this.wall?.ownerUsername === this.authService.getUsername();
   }
 
+  // Load the wall's sections and items, then update the header and return scroll position.
   loadWall(): void {
     this.loading = true;
     this.errorMessage = '';
@@ -82,6 +85,7 @@ export class WallDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Validate the form and add the section to the page only after backend success.
   createSection(): void {
     if (this.sectionForm.invalid || !this.wall) {
       this.sectionForm.markAllAsTouched();
@@ -110,11 +114,13 @@ export class WallDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Update the page title when the child header reports a saved change.
   updateWallHeader(wall: MusicWallDetail): void {
     this.wall = wall;
     this.pageHeaderService.show(wall.name);
   }
 
+  // Remove the section reported as deleted by the child component.
   removeSection(sectionId: number): void {
     if (this.wall) {
       this.wall.sections = this.wall.sections.filter(section => section.id !== sectionId);
@@ -128,6 +134,7 @@ export class WallDetailComponent implements OnInit, OnDestroy {
   private scrollToReturnSection(): void {
     const fragment = this.route.snapshot.fragment;
     if (!fragment || !/^section-\d+$/.test(fragment)) return;
+    // Wait for Angular to render the sections before scrolling to the requested one.
     setTimeout(() => document.getElementById(fragment)?.scrollIntoView({ block: 'center' }));
   }
 }

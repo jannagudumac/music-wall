@@ -8,14 +8,18 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+// The repository reads and saves tracks. JpaRepository provides the main CRUD operations.
 public interface TrackRepository extends JpaRepository<TrackEntity, Long> {
 
     List<TrackEntity> findAllByOrderByTitleAsc();
 
+    // Find this artist's tracks in alphabetical title order.
     List<TrackEntity> findByArtistIdOrderByTitleAsc(Long artistId);
 
+    // Find this album's tracks in alphabetical title order.
     List<TrackEntity> findByAlbumIdOrderByTitleAsc(Long albumId);
 
+    // Search track titles and artist names; PostgreSQL pg_trgm also finds similar spellings.
     @Query(value = """
             SELECT t.*
             FROM track t
@@ -32,6 +36,7 @@ public interface TrackRepository extends JpaRepository<TrackEntity, Long> {
             """, nativeQuery = true)
     List<TrackEntity> searchSimilar(@Param("query") String query);
 
+    // Score autocomplete matches by relevance and limit the returned list.
     @Query(value = """
             SELECT t.id AS id,
                    'TRACK' AS type,

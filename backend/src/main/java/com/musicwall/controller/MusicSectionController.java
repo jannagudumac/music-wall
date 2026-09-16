@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+// The controller delegates section requests to the service, which checks access to the parent wall.
 @RestController
 @RequestMapping("/api/walls/{wallId}/sections")
 public class MusicSectionController {
@@ -24,6 +25,7 @@ public class MusicSectionController {
         this.musicSectionService = musicSectionService;
     }
 
+    // Validate the section input before creating it; return HTTP 201 after success.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MusicSectionDTO createSection(
@@ -53,6 +55,7 @@ public class MusicSectionController {
         );
     }
 
+    // Return HTTP 204 with no body after deleting the section and its items.
     @DeleteMapping("/{sectionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSection(

@@ -1,10 +1,19 @@
-# Music Wall — RNCP defense version
+# Music Wall
 
-Music Wall turns the idea of a physical listening wall into a collaborative web application. A registered user creates a wall, organises albums or tracks into coloured sections, marks them `TO_LISTEN` or `LISTENED`, and directly adds other registered users as collaborators.
+Music Wall is a responsive collaborative web application for organising albums and tracks into personal listening walls. A registered user can create coloured sections, track what they want to hear, and share walls with other registered members.
 
-This repository is the deliberately simplified RNCP version. It favours a conventional Angular → Spring Boot → PostgreSQL architecture that can be explained and diagrammed clearly.
+This project was developed for the French RNCP *Concepteur Développeur d’Applications* certification. It uses a conventional Angular → Spring Boot → PostgreSQL architecture designed to remain clear, testable and easy to explain.
 
-## MVP
+![Music Wall dashboard](RNCP/05_Captures/desktop/app/app-desktop-dashboard.png)
+
+## Live application
+
+- Frontend: [music-wall.netlify.app](https://music-wall.netlify.app)
+- Backend API: [music-wall-backend.onrender.com](https://music-wall-backend.onrender.com)
+
+The backend uses Render's free tier and may need a short time to wake up after a period of inactivity.
+
+## Main features
 
 - Register, log in and log out with a unique username and a password of at
   least eight characters.
@@ -19,7 +28,7 @@ This repository is the deliberately simplified RNCP version. It favours a conven
 - Let owners and members manage sections and items; reserve wall settings and membership management for the owner.
 - Return from a catalogue detail to the original wall section through query parameters and a fragment.
 
-There is intentionally no email identity, pending collaboration state or complex wall role. Possible V2 work is listed at the end.
+The MVP intentionally has no email identity, invitation workflow or complex member roles. These are possible future improvements rather than partially implemented features.
 
 ## Technologies
 
@@ -32,6 +41,7 @@ There is intentionally no email identity, pending collaboration state or complex
 | Initial catalogue source | MusicBrainz, through a separate development tool |
 | Tests | JUnit 5, Mockito, MockMvc, H2 in PostgreSQL compatibility mode, Jasmine/Karma |
 | Packaging | Maven Wrapper, npm, Docker, Docker Compose |
+| Deployment | Nginx, Netlify and Render |
 
 ## Project structure
 
@@ -42,6 +52,7 @@ music-wall/
 │   │   ├── controller/   HTTP entry points
 │   │   ├── service/      business rules
 │   │   ├── repository/   Spring Data database access
+│   │   │   └── projection/ partial SQL query results used by repositories
 │   │   ├── entity/       JPA persistence model
 │   │   ├── dto/          request and response contracts
 │   │   ├── security/     JWT and Spring Security
@@ -57,7 +68,9 @@ music-wall/
 │   │   └── interceptors/ Bearer-token attachment
 │   ├── Dockerfile         Angular build + Nginx runtime
 │   └── nginx.conf         SPA fallback and /api proxy
-├── docs/                 RNCP diagrams and educational guide
+├── database/             schema helpers and catalogue seed
+├── tools/                optional catalogue preparation tool
+├── RNCP/                 dossier, diagrams, screenshots and defense notes
 ├── create-database.sql
 └── docker-compose.yml
 ```
@@ -73,9 +86,9 @@ For local development:
 For the container route, Docker Desktop is enough for the complete application:
 Angular/Nginx, Spring Boot and PostgreSQL.
 
-## Database isolation and local setup
+## Database setup
 
-The backend defaults to the dedicated database name `music_wall_rncp`. It must never be pointed at the database of the preserved full application.
+The backend uses the dedicated database name `music_wall_rncp`. Keep it separate from databases used by other local applications.
 
 Create the clean database:
 
@@ -100,16 +113,16 @@ JWT_SECRET=replace_with_a_random_secret_of_at_least_32_characters
 
 `JWT_SECRET`, `DB_USERNAME` and `DB_PASSWORD` have no committed production fallback. Hibernate creates/updates the RNCP schema; `schema.sql` adds the PostgreSQL trigram extension and catalogue search indexes after the tables exist.
 
-Populate a fresh catalogue after the backend has created its tables:
+After starting the backend once so that Hibernate can create the tables, populate a fresh catalogue:
 
 ```powershell
 psql -U postgres -d music_wall_rncp -f database/catalogue_seed.sql
 ```
 
-The seed contains catalogue reference data only. It never creates users, walls,
+The seed contains catalogue reference data only. It never creates users, passwords, walls,
 members, sections or listening states.
 
-## Catalogue architecture
+## Catalogue design
 
 Normal application use is deliberately local:
 
@@ -130,14 +143,6 @@ or provider identifiers in its entities and REST DTOs. Search and detail pages
 therefore continue to work when the internet or MusicBrainz is unavailable. The
 importer directory can be removed after database preparation without affecting
 the application.
-
-## Wall detail component styles
-
-`WallDetailComponent` owns the complete page layout, wallpaper and section-grid
-positioning. `WallHeaderComponent`, `WallMembersComponent`,
-`WallSectionComponent`, `MusicItemComponent` and `CatalogSearchComponent`
-each own the CSS for their own markup. Normal Angular style encapsulation is
-used; there is no wall-wide `ViewEncapsulation.None` or styling framework.
 
 ## Start locally
 
@@ -211,11 +216,20 @@ The named volume `music_wall_rncp_data` preserves only this RNCP database. Stop 
 
 An image is the packaged template built from a Dockerfile. A container is a running instance of an image. Compose describes how the containers, environment variables, ports, health checks and private network fit together.
 
-This Compose setup is the reproducible local/demo route, not a requirement that
-production use one deployment unit. The static Angular build can later be deployed
-independently to Netlify, while Spring Boot and PostgreSQL are deployed as separate
-Render services. A Netlify redirect or production environment configuration can
-route `/api` to the deployed backend without changing the Angular/Spring architecture.
+## Deployment
+
+The production services remain separate even though they share one Git repository:
+
+```text
+Netlify (Angular) → /api redirect → Render (Spring Boot) → Render PostgreSQL
+```
+
+- `netlify.toml` builds the `frontend/` directory and provides the Angular route fallback.
+- Netlify redirects `/api/*` requests to the Render backend, so production Angular can use `/api`.
+- Render builds the backend from `backend/Dockerfile`.
+- The backend needs `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET` and `CORS_ORIGIN`.
+- `CORS_ORIGIN` must contain the stable Netlify site URL, such as `https://music-wall.netlify.app`.
+- Render's internal PostgreSQL hostname is used only by the backend, not by the browser.
 
 ## Main API endpoints
 
@@ -229,7 +243,7 @@ All endpoints except registration/login and public catalogue/profile reads requi
 | POST/GET | `/api/profiles/me/avatar`, `/api/profiles/{username}/avatar` | Upload/read avatar bytes |
 | GET | `/api/catalog/search?query=...` | Search local catalogue |
 | GET | `/api/catalog/suggestions?query=...` | Autocomplete suggestions |
-| GET | `/api/catalog/{artists|albums|tracks}/{id}` | Catalogue detail |
+| GET | `/api/catalog/{artists\|albums\|tracks}/{id}` | Catalogue detail |
 | POST/GET | `/api/walls` | Create/list accessible walls |
 | GET/PUT/DELETE | `/api/walls/{wallId}` | Read or owner-update/delete wall |
 | PUT | `/api/walls/{wallId}/appearance` | Owner changes colour/wallpaper |
@@ -260,6 +274,13 @@ Angular component → Angular service/HttpClient → Controller → Service
                   → Repository → JPA/Hibernate → PostgreSQL
 ```
 
+- **Controllers** receive HTTP requests, validate DTOs and delegate the work.
+- **Services** contain business rules, transactions and permission checks.
+- **Repositories** read and save data with Spring Data JPA.
+- **Entities** describe the database model.
+- **DTOs** define the JSON exchanged with the frontend without exposing entities.
+- **Projections** contain partial database-query results used internally by repositories.
+
 The collaboration rule is equally direct:
 
 ```text
@@ -269,25 +290,15 @@ MusicWall.members = zero or more distinct Users (owner excluded)
 
 `WallAccessService` is the only small authorization helper. It answers owner/access questions; it is not a general permission framework. Wall member operations intentionally remain in `MusicWallController` and `MusicWallService` because membership is part of the wall resource.
 
-The detailed MCD, MLD/MPD, UML, use cases, sequences, three-tier diagram, class responsibilities and junior-friendly concept guide are in [docs/architecture-and-defense.md](docs/architecture-and-defense.md).
+## RNCP resources
 
-## Manual acceptance flows
+- [Project dossier](RNCP/01_Dossier_Projet/dossier-projet.docx)
+- [MCD, MLD and MPD diagrams](RNCP/04_Diagrammes/)
+- [Application screenshots and design evolution](RNCP/05_Captures/)
+- [Defense notes](RNCP/06_Notes_Defense/)
+- [Catalogue seed documentation](database/README.md)
 
-Before a defense/release, verify:
-
-1. Register/login and receive a JWT.
-2. Create a wall; confirm the creator is owner but is not duplicated in members.
-3. Update wall and appearance; create/edit/delete a section.
-4. Search catalogue; add one album or track; toggle listening status; delete it.
-5. Search a registered username; add it directly; open and edit the wall as that member.
-6. Remove the member and confirm access is denied.
-7. Update bio and upload a JPEG/PNG/WebP avatar.
-8. From a wall section open catalogue/detail and return to that wall and fragment.
-
-## Submission archive
-
-Create a submission ZIP from a reviewed Git commit rather than compressing the
-entire working directory:
+## Create a submission archive
 
 ```powershell
 git archive --format=zip --output=music-wall-submission.zip HEAD
@@ -300,6 +311,6 @@ directories and logs. Check the archive contents before sending it. Never submit
 database credentials or the JWT signing secret; recipients should create their own
 `backend/.env` from `backend/.env.example`.
 
-## V2 ideas
+## Possible improvements
 
-Future versions could add a friend system, friend requests, invitation approval, richer member roles, favourites, public-profile controls, genre statistics or concert discovery. They are not partially implemented in this RNCP codebase.
+A future version could add invitations, friend requests, richer member roles, favourites, public-profile controls, statistics or concert discovery.

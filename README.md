@@ -298,18 +298,11 @@ MusicWall.members = zero or more distinct Users (owner excluded)
 - [Defense notes](RNCP/06_Notes_Defense/)
 - [Catalogue seed documentation](database/README.md)
 
-## Create a submission archive
+## Clean archive
 
 ```powershell
 git archive --format=zip --output=music-wall-submission.zip HEAD
 ```
-
-`git archive` includes tracked source files and Maven/npm lock and wrapper files,
-but excludes untracked or ignored local data such as `backend/.env`, `.git`,
-`frontend/node_modules`, `frontend/.angular`, `frontend/dist`, Maven `target`
-directories and logs. Check the archive contents before sending it. Never submit
-database credentials or the JWT signing secret; recipients should create their own
-`backend/.env` from `backend/.env.example`.
 
 ## Possible improvements
 

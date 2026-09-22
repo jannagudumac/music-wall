@@ -1,8 +1,5 @@
 package com.musicwall.controller;
 
-import com.musicwall.dto.MusicItemDTO;
-import com.musicwall.service.MusicItemService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,8 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.musicwall.dto.MusicItemDTO;
+import com.musicwall.service.MusicItemService;
+
+import jakarta.validation.Valid;
 
 // The controller delegates item requests to the service, which checks the wall and section.
 @RestController
@@ -25,8 +27,8 @@ public class MusicItemController {
         this.musicItemService = musicItemService;
     }
 
-    // Add a catalogue track or album with a listening status; the service supplies its title and
-    // artist.
+    // Add a catalogue track or album with a listening status
+    // the service supplies its title and artist.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MusicItemDTO createItem(

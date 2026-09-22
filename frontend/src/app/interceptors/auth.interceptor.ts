@@ -38,8 +38,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Log out on HTTP 401, but keep the session on 403 because that means a permission was
-        // denied.
+        // Log out on HTTP 401, but keep the session on 403 because 
+        // that means a permission was denied.
         const sessionRejected = error.status === 401;
         const authenticationRequest = request.url.includes('/auth/');
 

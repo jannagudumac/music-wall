@@ -295,7 +295,6 @@ MusicWall.members = zero or more distinct Users (owner excluded)
 - [Project dossier](RNCP/01_Dossier_Projet/dossier-projet.docx)
 - [MCD, MLD and MPD diagrams](RNCP/04_Diagrammes/)
 - [Application screenshots and design evolution](RNCP/05_Captures/)
-- [Defense notes](RNCP/06_Notes_Defense/)
 - [Catalogue seed documentation](database/README.md)
 
 ## Clean archive

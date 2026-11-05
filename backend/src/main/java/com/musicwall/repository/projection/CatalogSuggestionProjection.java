@@ -1,7 +1,7 @@
 package com.musicwall.repository.projection;
 
-// Spring Data reads the SQL result through these getters; the score helps the service rank
-// suggestions.
+// Spring Data reads the SQL result through these getters
+// the score helps the service rank suggestions.
 public interface CatalogSuggestionProjection {
 
     Long getId();
